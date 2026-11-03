@@ -1,0 +1,487 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:views="clr-namespace:BillyGoat_UI.Views">
+
+    <!-- =====================================================================
+         "Classic Refresh" theme for Billy Goat Lawn Care.
+         Sections: 1 Colors, 2 Fonts, 3 Text styles, 4 Focus ring,
+                   5 Buttons, 6 Inputs, 7 Navigation tabs, 8 Panels,
+                   9 Lists (DataGrid), 10 Helpers
+         ===================================================================== -->
+
+    <!-- ===== 1. Colors ===== -->
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#DCE3DA" />
+    <SolidColorBrush x:Key="TitleGreenBrush"       Color="#163A28" />  <!-- titles, dark text accents -->
+    <SolidColorBrush x:Key="RailGreenBrush"        Color="#1E4B34" />  <!-- rail, primary buttons -->
+    <SolidColorBrush x:Key="TabInactiveBrush"      Color="#2F6B4B" />
+    <SolidColorBrush x:Key="PanelHeaderBrush"      Color="#E6ECE4" />
+    <SolidColorBrush x:Key="LineBrush"             Color="#9AA79B" />  <!-- all thin borders -->
+    <SolidColorBrush x:Key="TextBrush"             Color="#1B2B21" />
+    <SolidColorBrush x:Key="MutedTextBrush"        Color="#4A5B4F" />
+    <SolidColorBrush x:Key="SelectedRowBrush"      Color="#CFE5D6" />
+    <SolidColorBrush x:Key="ZebraRowBrush"         Color="#F4F7F2" />
+    <SolidColorBrush x:Key="PastDueBrush"          Color="#A63A22" />
+    <SolidColorBrush x:Key="SecondaryButtonBrush"  Color="#F1F4EF" />
+    <SolidColorBrush x:Key="HoverRowBrush"         Color="#E8F1EA" />
+    <SolidColorBrush x:Key="HintBackgroundBrush"   Color="#FBF6E2" />
+    <SolidColorBrush x:Key="HintBorderBrush"       Color="#C9B66B" />
+    <SolidColorBrush x:Key="PanelBrush"            Color="White" />
+
+    <!-- ===== 2. Fonts ===== -->
+    <FontFamily x:Key="AppFont">Segoe UI</FontFamily>
+    <sys:Double x:Key="BodyFontSize">16</sys:Double>
+    <sys:Double x:Key="SmallFontSize">14</sys:Double>
+    <sys:Double x:Key="HeadingFontSize">20</sys:Double>
+    <sys:Double x:Key="PageTitleFontSize">30</sys:Double>
+
+    <!-- ===== 3. Text styles ===== -->
+    <Style x:Key="PageTitleText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource PageTitleFontSize}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+    </Style>
+
+    <Style x:Key="SubtitleText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}" />
+        <Setter Property="Margin" Value="0,2,0,0" />
+    </Style>
+
+    <Style x:Key="HeadingText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource HeadingFontSize}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+    </Style>
+
+    <!-- Small grey helper text, e.g. notes under an input. -->
+    <Style x:Key="NoteText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- Bold label used above inputs and for sub-headings inside a panel. -->
+    <Style x:Key="FieldLabelText" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+
+    <!-- Label control (gives keyboard access keys like Alt+C) without the default padding. -->
+    <Style TargetType="Label">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+
+    <!-- ===== 4. Focus ring =====
+         Shown around a control when it gets focus from the keyboard (Tab key). -->
+    <Style x:Key="FocusRing">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="-3" Stroke="{StaticResource TitleGreenBrush}"
+                               StrokeThickness="2" SnapsToDevicePixels="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ===== 5. Buttons ===== -->
+
+    <!-- Base button: square corners, 44 px minimum height. -->
+    <Style x:Key="BaseButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+        <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Padding" Value="18,0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusRing}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Primary: dark green fill, white text. -->
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Background" Value="{StaticResource RailGreenBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource RailGreenBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Foreground" Value="White" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource TitleGreenBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#0F2A1C" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Secondary: light fill, 2 px dark green border. This is also the default for every Button. -->
+    <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Background" Value="{StaticResource SecondaryButtonBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource RailGreenBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource PanelHeaderBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectedRowBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Button" BasedOn="{StaticResource SecondaryButton}" />
+
+    <!-- Report list button: full-width row with a thin border, text on the left. -->
+    <Style x:Key="ReportLinkButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Background" Value="{StaticResource SecondaryButtonBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource PanelHeaderBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource RailGreenBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Text link: underlined dark green text that acts like a hyperlink. -->
+    <Style x:Key="TextLinkButton" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusRing}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <TextBlock Background="Transparent" TextDecorations="Underline" Padding="0,4">
+                        <ContentPresenter RecognizesAccessKey="True" />
+                    </TextBlock>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource RailGreenBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ===== 6. Inputs ===== -->
+
+    <!-- Text box: square, thin border, thicker dark green border when focused. -->
+    <Style TargetType="TextBox">
+        <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Margin="{TemplateBinding Padding}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Focusable="False" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource TitleGreenBrush}" />
+                            <Setter TargetName="Bd" Property="BorderThickness" Value="2" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Radio button: round outline with a dark green dot when checked. -->
+    <Style TargetType="RadioButton">
+        <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Margin" Value="0,4,22,4" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusRing}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <StackPanel Orientation="Horizontal" Background="Transparent">
+                        <Grid Width="18" Height="18" VerticalAlignment="Center">
+                            <Ellipse x:Name="Ring" Fill="White" Stroke="{StaticResource TitleGreenBrush}" StrokeThickness="1.5" />
+                            <Ellipse x:Name="Dot" Width="10" Height="10" Fill="{StaticResource TitleGreenBrush}" Visibility="Collapsed" />
+                        </Grid>
+                        <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Dot" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Ring" Property="StrokeThickness" Value="2.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ===== 7. Navigation tabs (left rail) =====
+         Each tab is a RadioButton, because exactly one tab can be active at a time.
+         Inactive: green with white text. Active: white with bold dark green text,
+         so it looks joined to the white main panel. -->
+    <Style x:Key="NavTabStyle" TargetType="RadioButton">
+        <Setter Property="Height" Value="62" />
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource TabInactiveBrush}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="TabBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{StaticResource RailGreenBrush}"
+                            BorderThickness="0,0,0,1">
+                        <Grid>
+                            <!-- Keyboard focus ring (hidden until the tab is focused with the keyboard). -->
+                            <Border x:Name="FocusBorder" Margin="5" BorderThickness="2"
+                                    BorderBrush="White" Visibility="Collapsed" />
+                            <ContentPresenter Margin="22,0,0,0" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource RailGreenBrush}" />
+                        </Trigger>
+                        <!-- Listed after IsMouseOver so the active look wins. -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource PanelBrush}" />
+                            <Setter TargetName="TabBorder" Property="BorderBrush" Value="{StaticResource PanelBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter TargetName="FocusBorder" Property="BorderBrush" Value="{StaticResource TitleGreenBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="FocusBorder" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ===== 8. Panels ===== -->
+
+    <!-- SectionPanel (Views/SectionPanel.cs): white box, thin border, light green header bar.
+         If Number is set, a small dark green circle with the number appears before the title. -->
+    <Style TargetType="views:SectionPanel">
+        <Setter Property="Background" Value="{StaticResource PanelBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="views:SectionPanel">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <DockPanel>
+                            <Border DockPanel.Dock="Top"
+                                    Background="{StaticResource PanelHeaderBrush}"
+                                    BorderBrush="{StaticResource LineBrush}"
+                                    BorderThickness="0,0,0,1"
+                                    Padding="14,10">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border x:Name="NumberCircle" Width="28" Height="28" CornerRadius="14"
+                                            Background="{StaticResource RailGreenBrush}" Margin="0,0,10,0">
+                                        <TextBlock Text="{TemplateBinding Number}" Foreground="White"
+                                                   FontSize="{StaticResource SmallFontSize}" FontWeight="Bold"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ContentPresenter ContentSource="Header" VerticalAlignment="Center"
+                                                      TextElement.FontSize="{StaticResource HeadingFontSize}"
+                                                      TextElement.FontWeight="Bold"
+                                                      TextElement.Foreground="{StaticResource TitleGreenBrush}" />
+                                </StackPanel>
+                            </Border>
+                            <ContentPresenter Margin="{TemplateBinding Padding}" />
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Number" Value="{x:Null}">
+                            <Setter TargetName="NumberCircle" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Small stat box (e.g. "Earned today  $1,860"). -->
+    <Style x:Key="StatBox" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource ZebraRowBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="MinWidth" Value="120" />
+    </Style>
+    <Style x:Key="StatLabelText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}" />
+    </Style>
+    <Style x:Key="StatValueText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+
+    <!-- Pale yellow hint box, e.g. "Double-click a customer to open the profile." -->
+    <Style x:Key="HintBox" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource HintBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource HintBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Margin" Value="0,8,0,0" />
+    </Style>
+
+    <!-- ===== 9. Lists (DataGrid) =====
+         Read-only lists with a light green header row, zebra rows and a green selected row. -->
+    <Style TargetType="DataGrid">
+        <Setter Property="AutoGenerateColumns" Value="False" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="SelectionMode" Value="Single" />
+        <Setter Property="SelectionUnit" Value="FullRow" />
+        <Setter Property="HeadersVisibility" Value="Column" />
+        <Setter Property="GridLinesVisibility" Value="None" />
+        <Setter Property="CanUserAddRows" Value="False" />
+        <Setter Property="CanUserDeleteRows" Value="False" />
+        <Setter Property="CanUserResizeRows" Value="False" />
+        <Setter Property="CanUserReorderColumns" Value="False" />
+        <Setter Property="CanUserSortColumns" Value="False" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="RowBackground" Value="White" />
+        <Setter Property="AlternatingRowBackground" Value="{StaticResource ZebraRowBrush}" />
+        <Setter Property="AlternationCount" Value="2" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="MinRowHeight" Value="40" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <!-- Tab moves into the list once and then out of it; arrow keys move between rows. -->
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Once" />
+    </Style>
+
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="{StaticResource PanelHeaderBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Padding" Value="10,9" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridColumnHeader">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="DataGridRow">
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource HoverRowBrush}" />
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectedRowBrush}" />
+            </Trigger>
+            <!-- Visible keyboard focus: dark green outline around the focused row. -->
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource TitleGreenBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="DataGridCell">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <Border Background="Transparent" Padding="10,0">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <!-- Keep the normal dark text on the light green selected row
+                 (the built-in style would switch to white text on blue). -->
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ===== 10. Helpers ===== -->
+    <views:EnumToBoolConverter x:Key="EnumToBool" />
+    <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+
+</ResourceDictionary>
