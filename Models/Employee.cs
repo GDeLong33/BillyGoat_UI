@@ -31,8 +31,8 @@ public class Employee
     /// <summary>"Alvarez, Marco"</summary>
     public string DisplayName => $"{LastName}, {FirstName}";
 
-    /// <summary>"On file" or an en dash.</summary>
-    public string MdardText => HasMdardLicense ? "On file" : "–";
+    /// <summary>"On file" or a dash.</summary>
+    public string MdardText => HasMdardLicense ? "On file" : "-";
 
     public string StatusText => IsActive ? "Active" : "Terminated";
 

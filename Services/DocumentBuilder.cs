@@ -34,6 +34,7 @@ public class DocumentBuilder
             FontSize = 12,
             Foreground = Brushes.Black,
             Background = Brushes.White,
+            TextAlignment = TextAlignment.Left,   // FlowDocuments are justified by default
         };
         AddTitle(title, subtitle);
     }

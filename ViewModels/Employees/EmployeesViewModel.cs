@@ -9,6 +9,7 @@ namespace BillyGoat_UI.ViewModels;
 /// <summary>
 /// ViewModel for the Employees page: the employee list with its filter,
 /// the Actions panel, and the "Selected: ..." details panel.
+/// "Employee Reports" shows the reports screen in place of the list.
 /// </summary>
 public partial class EmployeesViewModel : ObservableObject
 {
@@ -46,6 +47,13 @@ public partial class EmployeesViewModel : ObservableObject
     /// <summary>True when a row is selected (used to show/hide the details).</summary>
     public bool HasSelection => SelectedEmployee != null;
 
+    /// <summary>The Employee Reports screen when it is open, otherwise null (the list shows).</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsListVisible))]
+    public partial EmployeeReportsViewModel? Reports { get; set; }
+
+    public bool IsListVisible => Reports == null;
+
     partial void OnStatusFilterChanged(EmployeeStatusFilter value) => ApplyFilter();
 
     /// <summary>Rebuilds the visible list using the All / Active / Terminated filter.</summary>
@@ -75,18 +83,16 @@ public partial class EmployeesViewModel : ObservableObject
     /// <summary>Open button, double-click or Enter on a row.</summary>
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void Open() =>
-        MessageService.Show($"Employee profile for {SelectedEmployee!.DisplayName} is coming soon.");
+        MessageService.Show($"The employee record for {SelectedEmployee!.DisplayName} would open here.\n\n(Employee records are not part of this demo.)");
 
     [RelayCommand]
-    private void Add() => MessageService.Show("Adding a new employee is coming soon.");
+    private void Add() => MessageService.Show("A new, empty employee record would open here.\n\n(Employee records are not part of this demo.)");
 
     /// <summary>Exit goes back to the Search page.</summary>
     [RelayCommand]
     private void Exit() => _goHome();
 
+    /// <summary>"Employee Reports" button: shows the reports screen; its Close button comes back here.</summary>
     [RelayCommand]
-    private void TimeCards() => MessageService.Show("Employee time cards are coming soon.");
-
-    [RelayCommand]
-    private void Report() => MessageService.Show("The employee report is coming soon.");
+    private void OpenReports() => Reports = new EmployeeReportsViewModel(close: () => Reports = null);
 }

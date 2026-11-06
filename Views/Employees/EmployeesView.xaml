@@ -23,151 +23,151 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        <!-- Employee Reports screen (shown instead of the list when open). -->
+        <ContentControl Content="{Binding Reports}" Focusable="False"
+                        Visibility="{Binding Reports, Converter={StaticResource NullToVisibility}}" />
 
-        <!-- ===== Title ===== -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,18">
-            <TextBlock Text="Employees" Style="{StaticResource PageTitleText}" />
-            <TextBlock Text="Select an employee to see their work, or add a new one." Style="{StaticResource SubtitleText}" />
-        </StackPanel>
+        <Grid Visibility="{Binding IsListVisible, Converter={StaticResource BoolToVisibility}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="380" />
-            </Grid.ColumnDefinitions>
+            <!-- ===== Title ===== -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,18">
+                <TextBlock Text="Employees" Style="{StaticResource PageTitleText}" />
+                <TextBlock Text="Select an employee to see their work, or add a new one." Style="{StaticResource SubtitleText}" />
+            </StackPanel>
 
-            <!-- ===== Employee list (left) ===== -->
-            <views:SectionPanel Grid.Column="0" Header="Employee list">
-                <DockPanel>
-                    <!-- All / Active / Terminated (bottom) -->
-                    <WrapPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
-                        <RadioButton GroupName="EmployeeStatus" Content="All employees"
-                                     IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:EmployeeStatusFilter.All}}" />
-                        <RadioButton GroupName="EmployeeStatus" Content="Active employees"
-                                     IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:EmployeeStatusFilter.Active}}" />
-                        <RadioButton GroupName="EmployeeStatus" Content="Terminated employees"
-                                     IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:EmployeeStatusFilter.Terminated}}" />
-                    </WrapPanel>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="380" />
+                </Grid.ColumnDefinitions>
 
-                    <Border DockPanel.Dock="Bottom" Style="{StaticResource HintBox}">
-                        <TextBlock Text="Double-click to select your employee." FontSize="{StaticResource SmallFontSize}" />
-                    </Border>
+                <!-- ===== Employee list (left) ===== -->
+                <views:SectionPanel Grid.Column="0" Header="Employee list">
+                    <DockPanel>
+                        <!-- All / Active / Terminated (bottom) -->
+                        <WrapPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                            <RadioButton GroupName="EmployeeStatus" Content="All employees"
+                                         IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:EmployeeStatusFilter.All}}" />
+                            <RadioButton GroupName="EmployeeStatus" Content="Active employees"
+                                         IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:EmployeeStatusFilter.Active}}" />
+                            <RadioButton GroupName="EmployeeStatus" Content="Terminated employees"
+                                         IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:EmployeeStatusFilter.Terminated}}" />
+                        </WrapPanel>
 
-                    <DataGrid ItemsSource="{Binding Employees}"
-                              SelectedItem="{Binding SelectedEmployee}"
-                              AutomationProperties.Name="Employees"
-                              PreviewKeyDown="EmployeeGrid_PreviewKeyDown">
-                        <DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
-                                <EventSetter Event="MouseDoubleClick" Handler="EmployeeRow_DoubleClick" />
-                            </Style>
-                        </DataGrid.RowStyle>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding DisplayName}" Width="1.3*" />
-                            <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="1.2*" />
-                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="0.5*" />
-                            <DataGridTextColumn Header="MDARD license" Binding="{Binding MdardText}" Width="0.9*" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </DockPanel>
-            </views:SectionPanel>
+                        <Border DockPanel.Dock="Bottom" Style="{StaticResource HintBox}">
+                            <TextBlock Text="Double-click to open an employee." FontSize="{StaticResource SmallFontSize}" />
+                        </Border>
 
-            <!-- ===== Right column ===== -->
-            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Focusable="False">
-                <StackPanel>
+                        <DataGrid ItemsSource="{Binding Employees}"
+                                  SelectedItem="{Binding SelectedEmployee}"
+                                  AutomationProperties.Name="Employees"
+                                  views:DataGridOpen.Command="{Binding OpenCommand}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding DisplayName}" Width="1.3*" />
+                                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="1.2*" />
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="0.5*" />
+                                <DataGridTextColumn Header="MDARD license" Binding="{Binding MdardText}" Width="0.9*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </views:SectionPanel>
 
-                    <!-- Actions -->
-                    <views:SectionPanel Header="Actions" Margin="0,0,0,18">
-                        <StackPanel>
-                            <Grid Margin="0,0,0,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="10" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="10" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Content="_Open" Style="{StaticResource PrimaryButton}" Command="{Binding OpenCommand}" />
-                                <Button Grid.Column="2" Content="_Add" Command="{Binding AddCommand}" />
-                                <Button Grid.Column="4" Content="E_xit" Command="{Binding ExitCommand}" />
-                            </Grid>
-                            <Button Content="Employee _time cards" Command="{Binding TimeCardsCommand}" Margin="0,0,0,10" />
-                            <Button Content="Employee _report" Command="{Binding ReportCommand}" />
-                        </StackPanel>
-                    </views:SectionPanel>
+                <!-- ===== Right column ===== -->
+                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Focusable="False">
+                    <StackPanel>
 
-                    <!-- Selected employee details -->
-                    <views:SectionPanel Header="{Binding SelectedHeader}">
-                        <StackPanel Visibility="{Binding HasSelection, Converter={StaticResource BoolToVisibility}}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition /><RowDefinition /><RowDefinition /><RowDefinition />
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="ID" Style="{StaticResource DetailLabel}" />
-                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedEmployee.Id}" Style="{StaticResource DetailValue}" />
-                                <TextBlock Grid.Row="1" Text="Title" Style="{StaticResource DetailLabel}" />
-                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedEmployee.Title}" Style="{StaticResource DetailValue}" />
-                                <TextBlock Grid.Row="2" Text="MDARD license" Style="{StaticResource DetailLabel}" />
-                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedEmployee.MdardText}" Style="{StaticResource DetailValue}" />
-                                <TextBlock Grid.Row="3" Text="Status" Style="{StaticResource DetailLabel}" />
-                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedEmployee.StatusText}" Style="{StaticResource DetailValue}" />
-                            </Grid>
+                        <!-- Actions -->
+                        <views:SectionPanel Header="Actions" Margin="0,0,0,18">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Content="_Open" Style="{StaticResource PrimaryButton}" Command="{Binding OpenCommand}" />
+                                    <Button Grid.Column="2" Content="_Add" Command="{Binding AddCommand}" />
+                                    <Button Grid.Column="4" Content="E_xit" Command="{Binding ExitCommand}" />
+                                </Grid>
+                                <Button Content="Employee _Reports" Command="{Binding OpenReportsCommand}" />
+                            </StackPanel>
+                        </views:SectionPanel>
 
-                            <Border Style="{StaticResource Divider}" />
+                        <!-- Selected employee details -->
+                        <views:SectionPanel Header="{Binding SelectedHeader}">
+                            <StackPanel Visibility="{Binding HasSelection, Converter={StaticResource BoolToVisibility}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition /><RowDefinition /><RowDefinition /><RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="ID" Style="{StaticResource DetailLabel}" />
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedEmployee.Id}" Style="{StaticResource DetailValue}" />
+                                    <TextBlock Grid.Row="1" Text="Title" Style="{StaticResource DetailLabel}" />
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedEmployee.Title}" Style="{StaticResource DetailValue}" />
+                                    <TextBlock Grid.Row="2" Text="MDARD license" Style="{StaticResource DetailLabel}" />
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedEmployee.MdardText}" Style="{StaticResource DetailValue}" />
+                                    <TextBlock Grid.Row="3" Text="Status" Style="{StaticResource DetailLabel}" />
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedEmployee.StatusText}" Style="{StaticResource DetailValue}" />
+                                </Grid>
 
-                            <!-- This week: three small stat boxes -->
-                            <TextBlock Text="This week" Style="{StaticResource FieldLabelText}" Margin="0,0,0,8" />
-                            <UniformGrid Columns="3">
-                                <Border Style="{StaticResource StatBox}" MinWidth="0" Padding="8,6" Margin="0,0,6,0">
-                                    <StackPanel>
-                                        <TextBlock Text="Stops" Style="{StaticResource StatLabelText}" />
-                                        <TextBlock Text="{Binding SelectedEmployee.StopsThisWeek}" Style="{StaticResource StatValueText}" />
-                                    </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource StatBox}" MinWidth="0" Padding="8,6" Margin="3,0">
-                                    <StackPanel>
-                                        <TextBlock Text="Dollar amount" Style="{StaticResource StatLabelText}" />
-                                        <TextBlock Text="{Binding SelectedEmployee.DollarsText}" Style="{StaticResource StatValueText}" />
-                                    </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource StatBox}" MinWidth="0" Padding="8,6" Margin="6,0,0,0">
-                                    <StackPanel>
-                                        <TextBlock Text="Avg per stop" Style="{StaticResource StatLabelText}" />
-                                        <TextBlock Text="{Binding SelectedEmployee.AveragePerStopText}" Style="{StaticResource StatValueText}" />
-                                    </StackPanel>
-                                </Border>
-                            </UniformGrid>
+                                <Border Style="{StaticResource Divider}" />
 
-                            <Border Style="{StaticResource Divider}" />
+                                <!-- This week: three small stat boxes -->
+                                <TextBlock Text="This week" Style="{StaticResource FieldLabelText}" Margin="0,0,0,8" />
+                                <UniformGrid Columns="3">
+                                    <Border Style="{StaticResource StatBox}" MinWidth="0" Padding="8,6" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="Stops" Style="{StaticResource StatLabelText}" />
+                                            <TextBlock Text="{Binding SelectedEmployee.StopsThisWeek}" Style="{StaticResource StatValueText}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Style="{StaticResource StatBox}" MinWidth="0" Padding="8,6" Margin="3,0">
+                                        <StackPanel>
+                                            <TextBlock Text="Dollar amount" Style="{StaticResource StatLabelText}" />
+                                            <TextBlock Text="{Binding SelectedEmployee.DollarsText}" Style="{StaticResource StatValueText}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Style="{StaticResource StatBox}" MinWidth="0" Padding="8,6" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="Avg per stop" Style="{StaticResource StatLabelText}" />
+                                            <TextBlock Text="{Binding SelectedEmployee.AveragePerStopText}" Style="{StaticResource StatValueText}" />
+                                        </StackPanel>
+                                    </Border>
+                                </UniformGrid>
 
-                            <!-- Today's time card -->
-                            <TextBlock Text="Today's time card" Style="{StaticResource FieldLabelText}" Margin="0,0,0,4" />
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition /><RowDefinition />
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="Time in / out" Style="{StaticResource DetailLabel}" />
-                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedEmployee.TimeInOutText}" Style="{StaticResource DetailValue}" />
-                                <TextBlock Grid.Row="1" Text="Vehicle mileage" Style="{StaticResource DetailLabel}" />
-                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedEmployee.MileageText}" Style="{StaticResource DetailValue}" />
-                            </Grid>
-                        </StackPanel>
-                    </views:SectionPanel>
-                </StackPanel>
-            </ScrollViewer>
+                                <Border Style="{StaticResource Divider}" />
+
+                                <!-- Today's time card -->
+                                <TextBlock Text="Today's time card" Style="{StaticResource FieldLabelText}" Margin="0,0,0,4" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition /><RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Time in / out" Style="{StaticResource DetailLabel}" />
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedEmployee.TimeInOutText}" Style="{StaticResource DetailValue}" />
+                                    <TextBlock Grid.Row="1" Text="Vehicle mileage" Style="{StaticResource DetailLabel}" />
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedEmployee.MileageText}" Style="{StaticResource DetailValue}" />
+                                </Grid>
+                            </StackPanel>
+                        </views:SectionPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

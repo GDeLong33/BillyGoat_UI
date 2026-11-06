@@ -95,5 +95,13 @@
     <DataTemplate DataType="{x:Type vm:EmployeesViewModel}">
         <views:EmployeesView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:EmployeeReportsViewModel}">
+        <views:EmployeeReportsView />
+    </DataTemplate>
+
+    <!-- Report Gallery tab -->
+    <DataTemplate DataType="{x:Type vm:ReportGalleryViewModel}">
+        <views:ReportGalleryView />
+    </DataTemplate>
 
 </ResourceDictionary>
