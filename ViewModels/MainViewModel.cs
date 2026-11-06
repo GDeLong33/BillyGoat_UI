@@ -62,9 +62,9 @@ public partial class MainViewModel : ObservableObject
         _pages[AppPage.Office] = new OfficeViewModel(showAllTools: true);
         _pages[AppPage.Employees] = new EmployeesViewModel(goHome: () => SelectedPage = AppPage.Search);
         _pages[AppPage.ReportGallery] = new ReportGalleryViewModel();
-        _pages[AppPage.Routing] = new PlaceholderViewModel("Routing");
-        _pages[AppPage.BackupExport] = new PlaceholderViewModel("Backup & Export");
-        _pages[AppPage.Setup] = new PlaceholderViewModel("Setup");
+        _pages[AppPage.Routing] = new RoutingViewModel();
+        _pages[AppPage.BackupExport] = new BackupViewModel();
+        _pages[AppPage.Setup] = new SetupViewModel();
     }
 
     /// <summary>"Sign out" link at the bottom of the rail.</summary>

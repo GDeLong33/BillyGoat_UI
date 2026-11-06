@@ -15,6 +15,9 @@ public class LookupList
 
     public string Name { get; }
     public ObservableCollection<string> Items { get; }
+
+    /// <summary>The name is what screen readers announce for the list item.</summary>
+    public override string ToString() => Name;
 }
 
 /// <summary>

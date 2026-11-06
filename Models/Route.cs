@@ -25,6 +25,9 @@ public partial class Route : ObservableObject
     /// <summary>"1 - Saginaw North". This is also the text used in the Routes drop-down lists.</summary>
     public string DisplayName => $"{Number} - {Name}";
 
+    /// <summary>The name is what screen readers announce for the list item.</summary>
+    public override string ToString() => DisplayName;
+
     /// <summary>The stops in driving order.</summary>
     public ObservableCollection<RouteStop> Stops { get; } = new();
 
@@ -56,7 +59,11 @@ public partial class RouteStop : ObservableObject
     public partial DateTime ScheduledDate { get; set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DoneText))]
     public partial bool IsCompleted { get; set; }
+
+    /// <summary>"Done" or empty, for the Done column.</summary>
+    public string DoneText => IsCompleted ? "Done" : "";
 
     /// <summary>Text shown in the "Other routes" column (filled in by RoutingViewModel).</summary>
     [ObservableProperty]

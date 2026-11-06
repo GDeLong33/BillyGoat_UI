@@ -16,9 +16,6 @@
     <DataTemplate DataType="{x:Type vm:LoginViewModel}">
         <views:LoginView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:PlaceholderViewModel}">
-        <views:PlaceholderView />
-    </DataTemplate>
 
     <!-- Search tab and the Account screen -->
     <DataTemplate DataType="{x:Type vm:SearchViewModel}">
@@ -102,6 +99,27 @@
     <!-- Report Gallery tab -->
     <DataTemplate DataType="{x:Type vm:ReportGalleryViewModel}">
         <views:ReportGalleryView />
+    </DataTemplate>
+
+    <!-- Routing tab and its dialogs -->
+    <DataTemplate DataType="{x:Type vm:RoutingViewModel}">
+        <views:RoutingView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:AddStopViewModel}">
+        <views:AddStopView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:PickDateViewModel}">
+        <views:PickDateView />
+    </DataTemplate>
+
+    <!-- Backup & Export tab -->
+    <DataTemplate DataType="{x:Type vm:BackupViewModel}">
+        <views:BackupView />
+    </DataTemplate>
+
+    <!-- Setup tab -->
+    <DataTemplate DataType="{x:Type vm:SetupViewModel}">
+        <views:SetupView />
     </DataTemplate>
 
 </ResourceDictionary>

@@ -122,6 +122,41 @@ public static class FakeData
         }
     }
 
+    /// <summary>
+    /// After a Setup list item is renamed, saved records that used the old text
+    /// get the new text too (for example every account with Property type "Rental").
+    /// </summary>
+    public static void RenameLookupValue(LookupList list, string oldValue, string newValue)
+    {
+        string Swap(string current) => current == oldValue ? newValue : current;
+
+        foreach (Account a in Accounts)
+        {
+            if (list.Items == Lookups.PropertyTypes) a.PropertyType = Swap(a.PropertyType);
+            if (list.Items == Lookups.Salespeople) a.Salesperson = Swap(a.Salesperson);
+            if (list.Items == Lookups.Sources) a.Source = Swap(a.Source);
+            if (list.Items == Lookups.Frequencies) a.Frequency = Swap(a.Frequency);
+            if (list.Items == Lookups.SortOptions) a.Sort = Swap(a.Sort);
+            if (list.Items == Lookups.PrenotifyTypes) a.PrenotifyType = Swap(a.PrenotifyType);
+            if (list.Items == Lookups.Programs) a.Program = Swap(a.Program);
+            if (list.Items == Lookups.DiscountTypes) a.DiscountType = Swap(a.DiscountType);
+
+            foreach (ServiceRecord s in a.Services)
+            {
+                if (list.Items == Lookups.Services) s.ServiceName = Swap(s.ServiceName);
+                if (list.Items == Lookups.Salespeople) s.Salesperson = Swap(s.Salesperson);
+                if (list.Items == Lookups.Frequencies) s.Frequency = Swap(s.Frequency);
+                if (list.Items == Lookups.SortOptions) s.Sort = Swap(s.Sort);
+                if (list.Items == Lookups.PrenotifyTypes) s.PrenotifyType = Swap(s.PrenotifyType);
+                if (list.Items == Lookups.Programs) s.ProgramName = Swap(s.ProgramName);
+            }
+        }
+
+        // A renamed program keeps its list of services.
+        if (list.Items == Lookups.Programs && Lookups.ProgramServices.Remove(oldValue, out string[]? steps))
+            Lookups.ProgramServices[newValue] = steps;
+    }
+
     /// <summary>Adds a new, empty route (used when a route is added on the Setup tab).</summary>
     public static Route AddRoute(string name)
     {
