@@ -1,0 +1,105 @@
+<Window x:Class="BillyGoat_UI.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:BillyGoat_UI.ViewModels"
+        xmlns:models="clr-namespace:BillyGoat_UI.Models"
+        Title="Billy Goat Lawn Care"
+        Width="1440" Height="960"
+        MinWidth="1100" MinHeight="700"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="{StaticResource AppFont}"
+        FontSize="{StaticResource BodyFontSize}"
+        Foreground="{StaticResource TextBrush}"
+        Background="{StaticResource WindowBackgroundBrush}">
+
+    <!-- The MainViewModel is the DataContext for the whole window. -->
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <!-- ===== Login screen (only while nobody is signed in) ===== -->
+        <ContentControl Content="{Binding Login}" Focusable="False"
+                        Visibility="{Binding IsSignedIn, Converter={StaticResource InverseBoolToVisibility}}" />
+
+        <!-- ===== Signed-in shell: menu bar, left tab rail, white main panel ===== -->
+        <DockPanel Visibility="{Binding IsSignedIn, Converter={StaticResource BoolToVisibility}}">
+            <!-- Menu bar, like the original Service Pro 2000 window. -->
+            <Menu DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" FontSize="{StaticResource SmallFontSize}"
+                  Padding="4,2">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Sign out" Command="{Binding SignOutCommand}" />
+                    <MenuItem Header="E_xit" Command="{Binding ExitAppCommand}" />
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem Header="_About" Command="{Binding ShowAboutCommand}" />
+                </MenuItem>
+            </Menu>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ===== Main panel =====
+                     Margin -1 on the left slides it under the rail by one pixel, so the
+                     active (white) tab covers the panel's left border and the two join. -->
+                <Border Grid.Column="1" Margin="-1,10,10,10" Panel.ZIndex="0"
+                        Background="{StaticResource PanelBrush}"
+                        BorderBrush="{StaticResource LineBrush}" BorderThickness="1"
+                        Padding="22">
+                    <ContentControl Content="{Binding CurrentPage}" Focusable="False" />
+                </Border>
+
+                <!-- ===== Left rail (drawn on top of the main panel) ===== -->
+                <DockPanel Grid.Column="0" Panel.ZIndex="1" Background="{StaticResource RailGreenBrush}">
+                    <!-- Logo mark and company name -->
+                    <StackPanel DockPanel.Dock="Top" Margin="0,18,0,18" HorizontalAlignment="Center">
+                        <Grid Width="68" Height="68" AutomationProperties.Name="Billy Goat logo">
+                            <Ellipse Fill="{StaticResource TitleGreenBrush}" Stroke="White" StrokeThickness="2" />
+                            <Ellipse Margin="5" Stroke="{StaticResource SelectedRowBrush}" StrokeThickness="1.5" />
+                            <TextBlock Text="BG" Foreground="White" FontSize="24" FontWeight="Bold"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock Text="Billy Goat Lawn Care" Margin="0,8,0,0" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Signed-in user and Sign out link (bottom of the rail) -->
+                    <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource TabInactiveBrush}" BorderThickness="0,1,0,0"
+                            Padding="22,14,16,16">
+                        <StackPanel>
+                            <TextBlock Text="Signed in as" Foreground="{StaticResource SelectedRowBrush}"
+                                       FontSize="{StaticResource SmallFontSize}" />
+                            <TextBlock Text="{Binding SignedInName}" Foreground="White" FontWeight="Bold" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding SignedInRole}" Foreground="{StaticResource SelectedRowBrush}"
+                                       FontSize="{StaticResource SmallFontSize}" />
+                            <Button Content="Sign _out" Style="{StaticResource RailLinkButton}" Margin="0,6,0,0"
+                                    Command="{Binding SignOutCommand}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- The tabs. Each RadioButton is checked when SelectedPage equals its
+                         ConverterParameter; checking it sets SelectedPage (see EnumToBoolConverter). -->
+                    <StackPanel VerticalAlignment="Top" AutomationProperties.Name="Main navigation">
+                        <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Search"
+                                     IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Search}}" />
+                        <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Office"
+                                     IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Office}}" />
+                        <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Employees"
+                                     IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Employees}}" />
+                        <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Report Gallery"
+                                     IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.ReportGallery}}" />
+                        <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Routing"
+                                     IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Routing}}" />
+                        <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Backup &amp; Export"
+                                     IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.BackupExport}}" />
+                        <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Setup"
+                                     IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Setup}}" />
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

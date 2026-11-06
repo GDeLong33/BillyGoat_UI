@@ -11,12 +11,13 @@ public static class FakeData
     // The demo pretends "today" is Tuesday, October 6, 2026.
     public static readonly DateTime Today = new(2026, 10, 6);
 
-    // ----- Welcome page numbers -----
-    public const int StopsDoneToday = 12;
-    public const int StopsScheduledToday = 31;
-    public const decimal EarnedToday = 1860m;
-    public const decimal PastDue = 4120m;
-    public const int ApplicationsDueThisWeek = 47;
+    /// <summary>The three demo users. The password for all of them is "demo".</summary>
+    public static readonly List<User> Users =
+    [
+        new() { UserId = "admin",      Password = "demo", FullName = "Bill Gordon",  Role = UserRole.Administrator },
+        new() { UserId = "office",     Password = "demo", FullName = "Lena Brandt",  Role = UserRole.Office },
+        new() { UserId = "applicator", Password = "demo", FullName = "Marco Alvarez", Role = UserRole.Applicator },
+    ];
 
     /// <summary>The eight sample customers. Haddad, Sam is inactive.</summary>
     public static List<Customer> GetCustomers() =>

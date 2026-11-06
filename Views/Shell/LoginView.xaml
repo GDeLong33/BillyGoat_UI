@@ -1,0 +1,57 @@
+<UserControl x:Class="BillyGoat_UI.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Loaded="LoginView_Loaded">
+    <!-- DataContext is a LoginViewModel. The window background shows around the box. -->
+    <Grid>
+        <Border Width="460" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
+            <DockPanel>
+                <!-- Dark green header with the logo mark -->
+                <Border DockPanel.Dock="Top" Background="{StaticResource RailGreenBrush}" Padding="24,20">
+                    <StackPanel Orientation="Horizontal">
+                        <Grid Width="56" Height="56" AutomationProperties.Name="Billy Goat logo">
+                            <Ellipse Fill="{StaticResource TitleGreenBrush}" Stroke="White" StrokeThickness="2" />
+                            <TextBlock Text="BG" Foreground="White" FontSize="20" FontWeight="Bold"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="Billy Goat Lawn Care" Foreground="White" FontSize="{StaticResource HeadingFontSize}" FontWeight="Bold" />
+                            <TextBlock Text="Please sign in" Foreground="{StaticResource SelectedRowBrush}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Margin="28,24,28,28">
+                    <Label Content="_User ID" Target="{Binding ElementName=UserIdBox}" Margin="0,0,0,6" />
+                    <TextBox x:Name="UserIdBox" Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged}"
+                             AutomationProperties.Name="User ID" Margin="0,0,0,16" />
+
+                    <Label Content="_Password" Target="{Binding ElementName=PasswordBox}" Margin="0,0,0,6" />
+                    <PasswordBox x:Name="PasswordBox" AutomationProperties.Name="Password" Margin="0,0,0,16" />
+
+                    <!-- Error message (only shown when there is one). -->
+                    <TextBlock Text="{Binding ErrorMessage}" Margin="0,0,0,12"
+                               AutomationProperties.LiveSetting="Assertive">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource ErrorText}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ErrorMessage}" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!-- IsDefault: pressing Enter anywhere in the form clicks Sign in. -->
+                    <Button Content="_Sign in" Style="{StaticResource PrimaryButton}" IsDefault="True"
+                            Click="SignIn_Click" />
+
+                    <TextBlock Style="{StaticResource NoteText}" Margin="0,16,0,0"
+                               Text="Demo users: admin, office, applicator. The password for all is &quot;demo&quot;." />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

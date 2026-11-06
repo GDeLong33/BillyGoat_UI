@@ -1,12 +1,14 @@
 ﻿<Application x:Class="BillyGoat_UI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="Views/MainWindow.xaml">
+             StartupUri="Views/Shell/MainWindow.xaml">
     <Application.Resources>
-        <!-- All colors, fonts and control styles live in one file so the look can be changed in one place. -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- All colors, fonts and control styles live in one file so the look can be changed in one place. -->
                 <ResourceDictionary Source="Resources/Styles.xaml" />
+                <!-- Which UserControl to show for each ViewModel (pages and dialogs). -->
+                <ResourceDictionary Source="Resources/ViewTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

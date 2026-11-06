@@ -263,6 +263,269 @@
         </Setter>
     </Style>
 
+    <!-- Read-only text box: light grey fill so it is clear it cannot be typed in. -->
+    <Style x:Key="ReadOnlyTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="Background" Value="{StaticResource ZebraRowBrush}" />
+    </Style>
+
+    <!-- Multi-line text box (notes, instructions, directions). -->
+    <Style x:Key="MultiLineTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="MinHeight" Value="88" />
+        <Setter Property="Padding" Value="8,6" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <!-- Password box: same look as a text box. -->
+    <Style TargetType="PasswordBox">
+        <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Margin="{TemplateBinding Padding}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Focusable="False" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource TitleGreenBrush}" />
+                            <Setter TargetName="Bd" Property="BorderThickness" Value="2" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Check box: square box that fills dark green with a white tick when checked. -->
+    <Style TargetType="CheckBox">
+        <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Margin" Value="0,5,22,5" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusRing}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <StackPanel Orientation="Horizontal" Background="Transparent">
+                        <Border x:Name="Box" Width="20" Height="20" VerticalAlignment="Center"
+                                Background="White" BorderBrush="{StaticResource TitleGreenBrush}" BorderThickness="1.5">
+                            <Path x:Name="Tick" Data="M3,9 L7,13 L14,4" Stroke="White" StrokeThickness="2.5"
+                                  Visibility="Collapsed" />
+                        </Border>
+                        <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource TitleGreenBrush}" />
+                            <Setter TargetName="Tick" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Box" Property="BorderThickness" Value="2.5" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Drop-down list (ComboBox): square box with a small arrow on the right. -->
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="Bd" Background="Transparent" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource HoverRowBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SelectedRowBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ComboBox">
+        <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Padding" Value="9,0,34,0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <!-- The whole box is a toggle button that opens and closes the list. -->
+                        <ToggleButton Focusable="False" ClickMode="Press"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="White" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
+                                        <Path HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,13,0"
+                                              Data="M0,0 L5,5 L10,0" Stroke="{StaticResource TitleGreenBrush}" StrokeThickness="2" />
+                                    </Border>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+                        <!-- The selected item's text. -->
+                        <ContentPresenter IsHitTestVisible="False" Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center" HorizontalAlignment="Left"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" />
+                        <!-- Keyboard focus outline. -->
+                        <Border x:Name="FocusBorder" BorderBrush="{StaticResource TitleGreenBrush}" BorderThickness="2"
+                                Visibility="Collapsed" IsHitTestVisible="False" />
+                        <!-- The drop-down list. -->
+                        <Popup Placement="Bottom" AllowsTransparency="True" Focusable="False"
+                               IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Border Background="White" BorderBrush="{StaticResource LineBrush}" BorderThickness="1"
+                                    MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <ScrollViewer>
+                                    <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="FocusBorder" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Date picker: keeps the built-in calendar button, with our sizes and border. -->
+    <Style TargetType="DatePicker">
+        <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Padding" Value="6,0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+
+    <!-- List box (Setup lists, route list, report list): square rows, green selection. -->
+    <Style TargetType="ListBox">
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    </Style>
+    <Style TargetType="ListBoxItem">
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="Bd" Background="Transparent" BorderBrush="Transparent" BorderThickness="2"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource HoverRowBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SelectedRowBrush}" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource TitleGreenBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Large option button: a radio button drawn as a big bordered box
+         (used for "Billing address" choices and wizard options). -->
+    <Style x:Key="LargeOptionRadio" TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bd" Background="{StaticResource SecondaryButtonBrush}"
+                            BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="14,12" MinHeight="52">
+                        <StackPanel Orientation="Horizontal">
+                            <Grid Width="20" Height="20" VerticalAlignment="Center">
+                                <Ellipse Fill="White" Stroke="{StaticResource TitleGreenBrush}" StrokeThickness="1.5" />
+                                <Ellipse x:Name="Dot" Width="11" Height="11" Fill="{StaticResource TitleGreenBrush}" Visibility="Collapsed" />
+                            </Grid>
+                            <ContentPresenter Margin="12,0,0,0" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource PanelHeaderBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Dot" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SelectedRowBrush}" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource TitleGreenBrush}" />
+                            <Setter TargetName="Bd" Property="BorderThickness" Value="2" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- FormField (Views/Controls/FormField.cs): a label above one input. -->
+    <Style TargetType="views:FormField">
+        <Setter Property="Margin" Value="0,0,14,12" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="views:FormField">
+                    <StackPanel>
+                        <TextBlock Text="{TemplateBinding Header}" Style="{StaticResource FieldLabelText}"
+                                   Margin="0,0,0,4" TextWrapping="Wrap" />
+                        <ContentPresenter />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- ===== 7. Navigation tabs (left rail) =====
          Each tab is a RadioButton, because exactly one tab can be active at a time.
          Inactive: green with white text. Active: white with bold dark green text,
@@ -300,6 +563,67 @@
                             <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
                             <Setter Property="FontWeight" Value="Bold" />
                             <Setter TargetName="FocusBorder" Property="BorderBrush" Value="{StaticResource TitleGreenBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="FocusBorder" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- White underlined link on the dark green rail (e.g. "Sign out"). -->
+    <Style x:Key="RailLinkButton" TargetType="Button" BasedOn="{StaticResource TextLinkButton}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FocusVisualStyle">
+            <Setter.Value>
+                <Style>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Rectangle Margin="-3" Stroke="White" StrokeThickness="2" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource SelectedRowBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Account screen sub-menu: a vertical list of light tabs on the left of the account.
+         Checked = light green with a dark green bar on the left. -->
+    <Style x:Key="SubNavTabStyle" TargetType="RadioButton">
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bd" Background="{StaticResource SecondaryButtonBrush}"
+                            BorderBrush="{StaticResource LineBrush}" BorderThickness="1,0,1,1">
+                        <Grid>
+                            <Border x:Name="Bar" Width="5" HorizontalAlignment="Left" Background="Transparent" />
+                            <Border x:Name="FocusBorder" Margin="3" BorderThickness="2"
+                                    BorderBrush="{StaticResource TitleGreenBrush}" Visibility="Collapsed" />
+                            <ContentPresenter Margin="16,8,10,8" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource PanelHeaderBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SelectedRowBrush}" />
+                            <Setter TargetName="Bar" Property="Background" Value="{StaticResource TitleGreenBrush}" />
+                            <Setter Property="FontWeight" Value="Bold" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="FocusBorder" Property="Visibility" Value="Visible" />
@@ -417,6 +741,12 @@
         <Setter Property="KeyboardNavigation.TabNavigation" Value="Once" />
     </Style>
 
+    <!-- Wide list: columns keep their width and a horizontal scroll bar appears when needed. -->
+    <Style x:Key="WideDataGrid" TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
     <Style TargetType="DataGridColumnHeader">
         <Setter Property="Background" Value="{StaticResource PanelHeaderBrush}" />
         <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
@@ -483,5 +813,37 @@
     <!-- ===== 10. Helpers ===== -->
     <views:EnumToBoolConverter x:Key="EnumToBool" />
     <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    <views:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility" />
+    <views:NullToVisibilityConverter x:Key="NullToVisibility" />
+
+    <!-- Error message text (e.g. wrong password). -->
+    <Style x:Key="ErrorText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource PastDueBrush}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- Row of dialog buttons at the bottom right (OK / Cancel / Apply). -->
+    <Style x:Key="DialogButtonRow" TargetType="StackPanel">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Margin" Value="0,16,0,0" />
+    </Style>
+    <Style x:Key="DialogButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
+        <Setter Property="MinWidth" Value="110" />
+        <Setter Property="Margin" Value="10,0,0,0" />
+    </Style>
+    <Style x:Key="DialogPrimaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+        <Setter Property="MinWidth" Value="110" />
+        <Setter Property="Margin" Value="10,0,0,0" />
+    </Style>
+
+    <!-- Row of action buttons under a list (left aligned, wraps when narrow). -->
+    <Style x:Key="ButtonRowButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
+        <Setter Property="Margin" Value="0,0,10,10" />
+    </Style>
+    <Style x:Key="ButtonRowPrimaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+        <Setter Property="Margin" Value="0,0,10,10" />
+    </Style>
 
 </ResourceDictionary>

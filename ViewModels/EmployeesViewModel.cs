@@ -14,7 +14,7 @@ public partial class EmployeesViewModel : ObservableObject
 {
     private readonly List<Employee> _allEmployees = FakeData.GetEmployees();
 
-    // Called by the Exit button to go back to the Welcome tab.
+    // Called by the Exit button to go back to the Search tab.
     // MainViewModel passes this in, so this page does not need to know about MainViewModel.
     private readonly Action _goHome;
 
@@ -80,7 +80,7 @@ public partial class EmployeesViewModel : ObservableObject
     [RelayCommand]
     private void Add() => MessageService.Show("Adding a new employee is coming soon.");
 
-    /// <summary>Exit goes back to the Welcome page.</summary>
+    /// <summary>Exit goes back to the Search page.</summary>
     [RelayCommand]
     private void Exit() => _goHome();
 
