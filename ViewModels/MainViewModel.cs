@@ -57,7 +57,7 @@ public partial class MainViewModel : ObservableObject
     private void CreatePages()
     {
         _pages.Clear();
-        _pages[AppPage.Search] = new PlaceholderViewModel("Search");
+        _pages[AppPage.Search] = new SearchViewModel(OpenAccount, AddNewCustomer);
         _pages[AppPage.Office] = new PlaceholderViewModel("Office");
         _pages[AppPage.Employees] = new EmployeesViewModel(goHome: () => SelectedPage = AppPage.Search);
         _pages[AppPage.ReportGallery] = new PlaceholderViewModel("Report Gallery");
@@ -89,11 +89,47 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public partial object? CurrentPage { get; set; }
 
+    /// <summary>The account that is open on the Account screen, or null.</summary>
+    [ObservableProperty]
+    public partial AccountViewModel? OpenedAccount { get; set; }
+
     // Called automatically by the MVVM Toolkit whenever SelectedPage changes.
     partial void OnSelectedPageChanged(AppPage value)
     {
+        if (value == AppPage.Account)
+        {
+            CurrentPage = OpenedAccount;
+            return;
+        }
+
+        // Leaving the Account screen (Back button or a tab click) closes the account.
+        OpenedAccount = null;
+
         if (_pages.TryGetValue(value, out object? page))
+        {
+            // Refresh the search results so edits made on the Account screen show up.
+            if (page is SearchViewModel search)
+                search.Refresh();
             CurrentPage = page;
+        }
+    }
+
+    /// <summary>
+    /// Opens an account on the Account screen. This leaves the main menu:
+    /// no tab is selected while an account is open.
+    /// </summary>
+    public void OpenAccount(Account account)
+    {
+        OpenedAccount = new AccountViewModel(account,
+            backToMenu: () => SelectedPage = AppPage.Search,
+            addNewCustomer: AddNewCustomer);
+        SelectedPage = AppPage.Account;
+    }
+
+    /// <summary>"Add new customer" (from Search or from an open account).</summary>
+    private void AddNewCustomer()
+    {
+        MessageService.Show("Add new customer is coming soon.");
     }
 
     // ===== Menu bar =====

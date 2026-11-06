@@ -1,0 +1,99 @@
+<UserControl x:Class="BillyGoat_UI.Views.AccountView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:BillyGoat_UI.ViewModels">
+    <!-- DataContext is an AccountViewModel. -->
+    <DockPanel>
+        <!-- ===== Header: back button, account number, name, status, Accounting menu ===== -->
+        <Grid DockPanel.Dock="Top" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Content="_Back to main menu" Command="{Binding BackToMenuCommand}" VerticalAlignment="Center" />
+
+            <StackPanel Grid.Column="1" Margin="22,0,0,0" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Account.AccountNumber}" Style="{StaticResource PageTitleText}" />
+                    <TextBlock Text="{Binding Account.BillingName}" Style="{StaticResource PageTitleText}" Margin="16,0,0,0" />
+                    <!-- Status badge: green when Active, red otherwise. -->
+                    <Border Margin="16,0,0,0" Padding="10,2" VerticalAlignment="Center" BorderThickness="1">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="{StaticResource SelectedRowBrush}" />
+                                <Setter Property="BorderBrush" Value="{StaticResource TitleGreenBrush}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Account.IsActive}" Value="False">
+                                        <Setter Property="Background" Value="#F6E3DE" />
+                                        <Setter Property="BorderBrush" Value="{StaticResource PastDueBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="{Binding Account.Status}" FontWeight="Bold" AutomationProperties.Name="Account status">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Account.IsActive}" Value="False">
+                                            <Setter Property="Foreground" Value="{StaticResource PastDueBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Border>
+                </StackPanel>
+                <TextBlock Text="{Binding Account.ServiceAddressText, StringFormat='Service address: {0}'}" Style="{StaticResource SubtitleText}" />
+            </StackPanel>
+
+            <!-- Accounting menu -->
+            <Border Grid.Column="2" VerticalAlignment="Center" BorderBrush="{StaticResource RailGreenBrush}" BorderThickness="2"
+                    Background="{StaticResource SecondaryButtonBrush}">
+                <Menu Background="Transparent" FontSize="{StaticResource BodyFontSize}">
+                    <MenuItem Header="Accoun_ting" FontWeight="SemiBold" Foreground="{StaticResource TitleGreenBrush}"
+                              Padding="16,10">
+                        <MenuItem Header="Enter a _payment" FontWeight="Normal" Foreground="{StaticResource TextBrush}"
+                                  Command="{Binding EnterPaymentCommand}" />
+                    </MenuItem>
+                </Menu>
+            </Border>
+        </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="230" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ===== Sub-menu (left) ===== -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+                <StackPanel AutomationProperties.Name="Account sections">
+                    <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" />
+                    <RadioButton Style="{StaticResource SubNavTabStyle}" GroupName="AccountSections" Content="_1  Contact Information"
+                                 IsChecked="{Binding SelectedSection, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AccountSection.ContactInformation}}" />
+                    <RadioButton Style="{StaticResource SubNavTabStyle}" GroupName="AccountSections" Content="_2  Details"
+                                 IsChecked="{Binding SelectedSection, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AccountSection.Details}}" />
+                    <RadioButton Style="{StaticResource SubNavTabStyle}" GroupName="AccountSections" Content="_3  Pages and Notes"
+                                 IsChecked="{Binding SelectedSection, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AccountSection.PagesAndNotes}}" />
+                    <RadioButton Style="{StaticResource SubNavTabStyle}" GroupName="AccountSections" Content="_4  Services"
+                                 IsChecked="{Binding SelectedSection, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AccountSection.Services}}" />
+                    <RadioButton Style="{StaticResource SubNavTabStyle}" GroupName="AccountSections" Content="_5  Accounting Defaults"
+                                 IsChecked="{Binding SelectedSection, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AccountSection.AccountingDefaults}}" />
+                    <RadioButton Style="{StaticResource SubNavTabStyle}" GroupName="AccountSections" Content="_6  Accounting Adjustments"
+                                 IsChecked="{Binding SelectedSection, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AccountSection.AccountingAdjustments}}" />
+                    <RadioButton Style="{StaticResource SubNavTabStyle}" GroupName="AccountSections" Content="_7  Marketing Letters"
+                                 IsChecked="{Binding SelectedSection, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AccountSection.MarketingLetters}}" />
+                    <Button Content="_8  Add New Customer" Margin="0,14,0,0" HorizontalContentAlignment="Left" Padding="16,0"
+                            Command="{Binding AddNewCustomerCommand}" />
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ===== The selected sub-screen (right) ===== -->
+            <ContentControl Grid.Column="2" Content="{Binding CurrentSection}" Focusable="False" />
+        </Grid>
+    </DockPanel>
+</UserControl>

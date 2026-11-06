@@ -12,7 +12,7 @@ namespace BillyGoat_UI.ViewModels;
 /// </summary>
 public partial class EmployeesViewModel : ObservableObject
 {
-    private readonly List<Employee> _allEmployees = FakeData.GetEmployees();
+    private readonly List<Employee> _allEmployees = FakeData.Employees;
 
     // Called by the Exit button to go back to the Search tab.
     // MainViewModel passes this in, so this page does not need to know about MainViewModel.

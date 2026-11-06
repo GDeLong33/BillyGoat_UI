@@ -1,0 +1,132 @@
+<UserControl x:Class="BillyGoat_UI.Views.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views"
+             xmlns:models="clr-namespace:BillyGoat_UI.Models">
+    <!-- DataContext is a SearchViewModel. -->
+    <DockPanel>
+        <!-- ===== Title ===== -->
+        <Grid DockPanel.Dock="Top" Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Search" Style="{StaticResource PageTitleText}" />
+                <TextBlock Text="Find a customer account, then double-click it to open it." Style="{StaticResource SubtitleText}" />
+            </StackPanel>
+            <Button Grid.Column="1" Content="_Add new customer" VerticalAlignment="Top"
+                    Command="{Binding AddNewCustomerCommand}" />
+        </Grid>
+
+        <views:SectionPanel Header="Find an account">
+            <DockPanel>
+                <!-- "Search by" radio buttons -->
+                <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                    <TextBlock Text="Search by" Style="{StaticResource FieldLabelText}"
+                               VerticalAlignment="Center" Margin="0,0,18,0" />
+                    <RadioButton GroupName="SearchBy" Content="_Last name"
+                                 IsChecked="{Binding SearchField, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AccountSearchField.LastName}}" />
+                    <RadioButton GroupName="SearchBy" Content="_First name"
+                                 IsChecked="{Binding SearchField, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AccountSearchField.FirstName}}" />
+                    <RadioButton GroupName="SearchBy" Content="Account _number"
+                                 IsChecked="{Binding SearchField, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AccountSearchField.AccountNumber}}" />
+                    <RadioButton GroupName="SearchBy" Content="Street a_ddress"
+                                 IsChecked="{Binding SearchField, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AccountSearchField.StreetAddress}}" />
+                </WrapPanel>
+
+                <!-- Search box + Search button -->
+                <Grid DockPanel.Dock="Top" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="SearchBox"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             AutomationProperties.Name="Search text"
+                             AutomationProperties.HelpText="{Binding SearchHint}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding SearchCommand}" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+
+                    <!-- Grey hint text, only visible while the box is empty. -->
+                    <TextBlock Text="{Binding SearchHint}" IsHitTestVisible="False"
+                               Margin="11,0,0,0" VerticalAlignment="Center"
+                               Foreground="{StaticResource MutedTextBrush}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <Button Grid.Column="1" Content="_Search" Style="{StaticResource PrimaryButton}"
+                            Command="{Binding SearchCommand}" Margin="10,0,0,0" MinWidth="110" />
+                </Grid>
+
+                <!-- Active / All / Inactive + hint (bottom) -->
+                <Grid DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel VerticalAlignment="Center">
+                        <RadioButton GroupName="AccountStatus" Content="Acti_ve accounts"
+                                     IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AccountStatusFilter.Active}}" />
+                        <RadioButton GroupName="AccountStatus" Content="All a_ccounts"
+                                     IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AccountStatusFilter.All}}" />
+                        <RadioButton GroupName="AccountStatus" Content="_Inactive accounts"
+                                     IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AccountStatusFilter.Inactive}}" />
+                    </WrapPanel>
+                    <Border Grid.Column="1" Style="{StaticResource HintBox}" Margin="0">
+                        <TextBlock Text="Double-click to open an account." FontSize="{StaticResource SmallFontSize}" />
+                    </Border>
+                </Grid>
+
+                <TextBlock DockPanel.Dock="Top" Text="{Binding ResultCountText}" Style="{StaticResource NoteText}"
+                           Margin="0,0,0,6" AutomationProperties.LiveSetting="Polite" />
+
+                <!-- Results. Fixed column widths, so the table scrolls sideways when the window is narrow. -->
+                <DataGrid Style="{StaticResource WideDataGrid}"
+                          ItemsSource="{Binding Results}"
+                          SelectedItem="{Binding SelectedAccount}"
+                          AutomationProperties.Name="Search results"
+                          views:DataGridOpen.Command="{Binding OpenAccountCommand}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Account number" Binding="{Binding AccountNumber}" Width="150" />
+                        <DataGridTemplateColumn Header="Status" Width="110">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Status}" FontWeight="SemiBold">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                        <Setter Property="Foreground" Value="{StaticResource PastDueBrush}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Billing name" Binding="{Binding BillingName}" Width="210" />
+                        <DataGridTextColumn Header="Billing address" Binding="{Binding BillingAddressText}" Width="320" />
+                        <DataGridTextColumn Header="Service address" Binding="{Binding ServiceAddressText}" Width="320" />
+                        <DataGridTextColumn Header="Service name" Binding="{Binding ServiceNameText}" Width="240" />
+                        <DataGridTextColumn Header="Measurement" Binding="{Binding MeasurementText}" Width="140" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </views:SectionPanel>
+    </DockPanel>
+</UserControl>
