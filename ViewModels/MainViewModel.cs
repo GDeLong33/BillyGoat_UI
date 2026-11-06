@@ -59,7 +59,7 @@ public partial class MainViewModel : ObservableObject
     {
         _pages.Clear();
         _pages[AppPage.Search] = new SearchViewModel(OpenAccount, AddNewCustomer);
-        _pages[AppPage.Office] = new PlaceholderViewModel("Office");
+        _pages[AppPage.Office] = new OfficeViewModel(showAllTools: true);
         _pages[AppPage.Employees] = new EmployeesViewModel(goHome: () => SelectedPage = AppPage.Search);
         _pages[AppPage.ReportGallery] = new PlaceholderViewModel("Report Gallery");
         _pages[AppPage.Routing] = new PlaceholderViewModel("Routing");

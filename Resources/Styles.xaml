@@ -172,6 +172,15 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Big menu button with a title and a description (Office tool menu). -->
+    <Style x:Key="MenuTileButton" TargetType="Button" BasedOn="{StaticResource ReportLinkButton}">
+        <Setter Property="MinHeight" Value="78" />
+        <Setter Property="Padding" Value="18,10" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="FontWeight" Value="Normal" />
+    </Style>
+
     <!-- Text link: underlined dark green text that acts like a hyperlink. -->
     <Style x:Key="TextLinkButton" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
@@ -400,7 +409,9 @@
                         <ContentPresenter IsHitTestVisible="False" Margin="{TemplateBinding Padding}"
                                           VerticalAlignment="Center" HorizontalAlignment="Left"
                                           Content="{TemplateBinding SelectionBoxItem}"
-                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" />
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                          ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" />
                         <!-- Keyboard focus outline. -->
                         <Border x:Name="FocusBorder" BorderBrush="{StaticResource TitleGreenBrush}" BorderThickness="2"
                                 Visibility="Collapsed" IsHitTestVisible="False" />
@@ -885,6 +896,11 @@
         <Setter Property="MinWidth" Value="110" />
         <Setter Property="Margin" Value="10,0,0,0" />
     </Style>
+
+    <!-- One line of a checklist (Models.CheckItem): a check box with the item's name. -->
+    <DataTemplate x:Key="CheckItemTemplate">
+        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" Margin="0,3" />
+    </DataTemplate>
 
     <!-- Row of action buttons under a list (left aligned, wraps when narrow). -->
     <Style x:Key="ButtonRowButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">

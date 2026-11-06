@@ -68,6 +68,29 @@
         <views:RequiredFieldsView />
     </DataTemplate>
 
+    <!-- Office tab: menu, tools and the batch pop-up -->
+    <DataTemplate DataType="{x:Type vm:OfficeViewModel}">
+        <views:OfficeView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BatchDialogViewModel}">
+        <views:BatchDialogView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:CompletedServicesViewModel}">
+        <views:CompletedServicesView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:EnterPaymentsViewModel}">
+        <views:EnterPaymentsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:PrintWorkOrdersViewModel}">
+        <views:PrintWorkOrdersView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:PriceIncreaseViewModel}">
+        <views:PriceIncreaseView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:PrepayLettersViewModel}">
+        <views:PrepayLettersView />
+    </DataTemplate>
+
     <!-- Employees tab -->
     <DataTemplate DataType="{x:Type vm:EmployeesViewModel}">
         <views:EmployeesView />

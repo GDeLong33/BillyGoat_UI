@@ -1,0 +1,32 @@
+<UserControl x:Class="BillyGoat_UI.Views.BatchDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views"
+             Width="520">
+    <!-- DataContext is a BatchDialogViewModel. -->
+    <StackPanel>
+        <TextBlock Text="{Binding Heading}" Style="{StaticResource PageTitleText}" FontSize="24" Margin="0,0,0,14" />
+
+        <views:FormField Header="Batch date">
+            <DatePicker SelectedDate="{Binding BatchDate}" />
+        </views:FormField>
+
+        <StackPanel AutomationProperties.Name="Batch">
+            <RadioButton Style="{StaticResource LargeOptionRadio}" GroupName="BatchChoice" Content="Create a _new batch"
+                         IsChecked="{Binding CreateNew}" />
+            <RadioButton Style="{StaticResource LargeOptionRadio}" GroupName="BatchChoice" Content="Use an _existing unposted batch"
+                         IsChecked="{Binding UseExisting}" />
+        </StackPanel>
+
+        <views:FormField Header="Unposted batch" Margin="0,4,0,0" IsEnabled="{Binding UseExisting}">
+            <ComboBox ItemsSource="{Binding UnpostedBatches}" SelectedItem="{Binding SelectedBatch}" DisplayMemberPath="DisplayName" />
+        </views:FormField>
+
+        <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorText}" Margin="0,8,0,0" />
+
+        <StackPanel Style="{StaticResource DialogButtonRow}">
+            <Button Content="_OK" Style="{StaticResource DialogPrimaryButton}" Command="{Binding OkCommand}" IsDefault="True" />
+            <Button Content="Cancel" Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" IsCancel="True" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

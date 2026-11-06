@@ -1,0 +1,71 @@
+<UserControl x:Class="BillyGoat_UI.Views.OfficeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views">
+    <!-- DataContext is an OfficeViewModel. Shows the tool menu, or the open tool. -->
+    <UserControl.Resources>
+        <!-- Title + description inside each menu button. -->
+        <Style x:Key="TileTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="{StaticResource HeadingFontSize}" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style x:Key="TileText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <!-- ===== Tool menu ===== -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False"
+                      Visibility="{Binding IsMenuVisible, Converter={StaticResource BoolToVisibility}}">
+            <StackPanel MaxWidth="900" HorizontalAlignment="Left">
+                <TextBlock Text="Office" Style="{StaticResource PageTitleText}" />
+                <TextBlock Text="Choose a tool." Style="{StaticResource SubtitleText}" Margin="0,2,0,18" />
+
+                <Button Style="{StaticResource MenuTileButton}" Command="{Binding OpenCompletedServicesCommand}"
+                        AutomationProperties.Name="Enter Completed Services">
+                    <StackPanel>
+                        <TextBlock Text="1  Enter Completed Services" Style="{StaticResource TileTitle}" />
+                        <TextBlock Text="Type or scan the invoice numbers from finished work orders, with time and materials." Style="{StaticResource TileText}" />
+                    </StackPanel>
+                </Button>
+
+                <!-- The other four tools are hidden for the Applicator role. -->
+                <StackPanel Visibility="{Binding ShowAllTools, Converter={StaticResource BoolToVisibility}}">
+                    <Button Style="{StaticResource MenuTileButton}" Command="{Binding OpenPaymentsCommand}"
+                            AutomationProperties.Name="Enter Payments">
+                        <StackPanel>
+                            <TextBlock Text="2  Enter Payments" Style="{StaticResource TileTitle}" />
+                            <TextBlock Text="Record checks and cash, and choose which services they pay for." Style="{StaticResource TileText}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource MenuTileButton}" Command="{Binding OpenPrintWorkOrdersCommand}"
+                            AutomationProperties.Name="Print Work Orders">
+                        <StackPanel>
+                            <TextBlock Text="3  Print Work Orders" Style="{StaticResource TileTitle}" />
+                            <TextBlock Text="Pick the services, routes and dates, then print the work orders for the crews." Style="{StaticResource TileText}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource MenuTileButton}" Command="{Binding OpenPriceIncreaseCommand}"
+                            AutomationProperties.Name="Service Price Increase">
+                        <StackPanel>
+                            <TextBlock Text="4  Service Price Increase" Style="{StaticResource TileTitle}" />
+                            <TextBlock Text="Raise the price of open services by an amount or a percent." Style="{StaticResource TileText}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource MenuTileButton}" Command="{Binding OpenLettersCommand}"
+                            AutomationProperties.Name="Print Prepay / Renewal Letters">
+                        <StackPanel>
+                            <TextBlock Text="5  Print Prepay / Renewal Letters" Style="{StaticResource TileTitle}" />
+                            <TextBlock Text="Send next season's prices with a prepay discount and a payment stub." Style="{StaticResource TileText}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ===== The open tool ===== -->
+        <ContentControl Content="{Binding CurrentTool}" Focusable="False"
+                        Visibility="{Binding CurrentTool, Converter={StaticResource NullToVisibility}}" />
+    </Grid>
+</UserControl>

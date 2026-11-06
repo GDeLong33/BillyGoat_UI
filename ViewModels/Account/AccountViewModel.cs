@@ -89,7 +89,15 @@ public partial class AccountViewModel : ObservableObject
     [RelayCommand]
     private void AddNewCustomer() => _addNewCustomer();
 
-    /// <summary>Menu: Accounting > Enter a payment.</summary>
+    /// <summary>
+    /// Menu: Accounting > Enter a payment. Shows the same Enter Payments screen as the
+    /// Office tab, with this account already filled in. Close returns to the sub-screen.
+    /// </summary>
     [RelayCommand]
-    private void EnterPayment() => MessageService.Show("Enter a payment is coming soon.");
+    private void EnterPayment()
+    {
+        Batch? batch = BatchDialogViewModel.Ask("Payment");
+        if (batch != null)
+            CurrentSection = new EnterPaymentsViewModel(batch, close: () => CurrentSection = GetSection(SelectedSection), startAccount: Account);
+    }
 }

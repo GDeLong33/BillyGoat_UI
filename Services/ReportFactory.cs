@@ -70,5 +70,48 @@ public static partial class ReportFactory
         return doc.Document;
     }
 
+    /// <summary>Prepay / renewal letters: one page per account with a payment stub at the bottom.</summary>
+    public static FlowDocument Letters(List<(Account Account, List<ServiceRecord> Services)> letters,
+        string letterType, string letterSize, decimal prepayPercent, DateTime? expires, bool billingOnStub)
+    {
+        DocumentBuilder doc = new($"{letterType} letters", $"{letters.Count} letter(s), {letterSize}");
+        int nextYear = FakeData.Today.Year + 1;
+
+        bool first = true;
+        foreach ((Account account, List<ServiceRecord> services) in letters)
+        {
+            if (!first)
+                doc.PageBreak();
+            first = false;
+
+            Address bill = account.Billing;
+            decimal total = services.Sum(s => s.SaleAmount);
+            decimal prepay = Math.Round(total * (1 - prepayPercent / 100m), 2);
+            string greeting = bill.LastName.Length > 0 ? $"Dear {(bill.Salutation.Length > 0 ? bill.Salutation : bill.FirstName)} {bill.LastName}," : "Dear customer,";
+
+            doc.Text(Formats.Date(FakeData.Today))
+               .Text($"{bill.DisplayName}\n{bill.StreetLine}\n{bill.City}, {bill.State} {bill.Zip}")
+               .Text(greeting)
+               .Text(letterType switch
+               {
+                   "Upsell" => $"Thank you for choosing Billy Goat Lawn Care. Your {nextYear} lawn plan is below. Customers who prepay save {prepayPercent:0.##}%. Ask us about adding aeration or shrub care to your plan.",
+                   "Renewal" => $"It is time to renew your lawn care for {nextYear}. Your services are listed below at this year's prices.",
+                   "Prepay reminder" => $"This is a friendly reminder that the prepay discount of {prepayPercent:0.##}% ends on {Formats.Date(expires)}.",
+                   _ => $"Thank you for choosing Billy Goat Lawn Care. Your {nextYear} lawn plan is below. Customers who prepay save {prepayPercent:0.##}%.",
+               })
+               .Table(["Service", "Price"], services.Select(s => new[] { s.ServiceName, Formats.Money(s.SaleAmount) }))
+               .Text($"Total for the season: {Formats.Money(total)}    Prepay price: {Formats.Money(prepay)} (pay by {Formats.Date(expires)})", bold: true)
+               .Text("Thank you,\nBilly Goat Lawn Care")
+               .Text("- - - - - - - - - - - - - - - - - - - -  cut here and return with your payment  - - - - - - - - - - - - - - - - - - - -")
+               .Barcode(account.AccountNumber.Replace("A-", ""))
+               .Fields(
+                   ("Account", account.AccountNumber),
+                   ("Prepay amount", Formats.Money(prepay)),
+                   ("Pay by", Formats.Date(expires)),
+                   ("Bill to", billingOnStub ? account.BillingAddressText : bill.DisplayName));
+        }
+        return doc.Document;
+    }
+
     private static string FirstNonEmpty(params string[] values) => values.FirstOrDefault(v => v.Length > 0) ?? "";
 }

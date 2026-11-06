@@ -53,8 +53,8 @@
                       AutomationProperties.Name="Accounting history">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Entry date" Binding="{Binding EntryDate, StringFormat=MM/dd/yyyy}" Width="120" />
-                    <DataGridTextColumn Header="Transaction" Binding="{Binding Transaction}" Width="130" />
-                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="110" />
+                    <DataGridTextColumn Header="Transaction" Binding="{Binding Transaction}" Width="170" />
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="150" />
                     <DataGridTextColumn Header="Memo" Binding="{Binding Memo}" Width="300" />
                     <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=C2}" Width="110" />
                     <DataGridTextColumn Header="Batch" Binding="{Binding Batch}" Width="100" />

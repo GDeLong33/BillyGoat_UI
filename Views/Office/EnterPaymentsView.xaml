@@ -1,0 +1,142 @@
+<UserControl x:Class="BillyGoat_UI.Views.EnterPaymentsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views"
+             xmlns:vm="clr-namespace:BillyGoat_UI.ViewModels">
+    <!-- DataContext is an EnterPaymentsViewModel (Office tab, or Accounting > Enter a payment). -->
+    <DockPanel>
+        <!-- ===== Title + Close ===== -->
+        <Grid DockPanel.Dock="Top" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Enter Payments" Style="{StaticResource PageTitleText}" />
+                <TextBlock Text="{Binding Batch.DisplayName, StringFormat='Payment batch {0}'}" Style="{StaticResource SubtitleText}" />
+            </StackPanel>
+            <Button Grid.Column="1" Content="_Close" MinWidth="110" VerticalAlignment="Top" Command="{Binding CloseCommand}" />
+        </Grid>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="18" />
+                        <ColumnDefinition Width="1.4*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- ===== Account information ===== -->
+                    <views:SectionPanel Header="Account information" VerticalAlignment="Top">
+                        <StackPanel>
+                            <views:FormField Header="Account number or barcode">
+                                <TextBox Text="{Binding AccountNumberText, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" />
+                            </views:FormField>
+                            <TextBlock Style="{StaticResource NoteText}" Text="Example: A-01842, or an invoice number from a bill stub." />
+                        </StackPanel>
+                    </views:SectionPanel>
+
+                    <!-- ===== Payment details ===== -->
+                    <views:SectionPanel Grid.Column="2" Header="Payment details" VerticalAlignment="Top">
+                        <StackPanel>
+                            <UniformGrid Columns="4">
+                                <views:FormField Header="Date">
+                                    <DatePicker SelectedDate="{Binding PaymentDate}" />
+                                </views:FormField>
+                                <views:FormField Header="Payment type">
+                                    <ComboBox ItemsSource="{Binding PaymentTypes}" SelectedItem="{Binding PaymentType}" />
+                                </views:FormField>
+                                <views:FormField Header="Amount ($)">
+                                    <TextBox Text="{Binding AmountText, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" />
+                                </views:FormField>
+                                <views:FormField Header="Check number" IsEnabled="{Binding IsCheck}">
+                                    <TextBox Text="{Binding CheckNumber, UpdateSourceTrigger=PropertyChanged}" />
+                                </views:FormField>
+                            </UniformGrid>
+                            <TextBlock Text="Apply advanced payments as" Style="{StaticResource FieldLabelText}" />
+                            <WrapPanel AutomationProperties.Name="Apply advanced payments as">
+                                <RadioButton GroupName="AdvanceOption" Content="Prepayment"
+                                             IsChecked="{Binding AdvanceOption, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AdvancePaymentOption.Prepayment}}" />
+                                <RadioButton GroupName="AdvanceOption" Content="Deposit"
+                                             IsChecked="{Binding AdvanceOption, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AdvancePaymentOption.Deposit}}" />
+                                <RadioButton GroupName="AdvanceOption" Content="Percent"
+                                             IsChecked="{Binding AdvanceOption, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:AdvancePaymentOption.Percent}}" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </views:SectionPanel>
+                </Grid>
+
+                <TextBlock Text="{Binding AccountHeaderText}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,14,0,0"
+                           AutomationProperties.LiveSetting="Polite" />
+
+                <!-- ===== Listing (fills after a valid account number) ===== -->
+                <views:SectionPanel Header="Services with a balance" Margin="0,10,0,0"
+                                    Visibility="{Binding HasAccount, Converter={StaticResource BoolToVisibility}}">
+                    <StackPanel>
+                        <DataGrid Style="{StaticResource WideDataGrid}" ItemsSource="{Binding Lines}" AutomationProperties.Name="Services to pay"
+                                  MaxHeight="300">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ST" Binding="{Binding Service.StatusCode}" Width="50" />
+                                <DataGridTextColumn Header="Service" Binding="{Binding Service.ServiceName}" Width="210" />
+                                <DataGridTextColumn Header="Sold" Binding="{Binding Service.DateSold, StringFormat=MM/dd/yyyy}" Width="110" />
+                                <DataGridTextColumn Header="Scheduled" Binding="{Binding Service.DateScheduled, StringFormat=MM/dd/yyyy}" Width="110" />
+                                <DataGridTextColumn Header="Printed" Binding="{Binding Service.DatePrinted, StringFormat=MM/dd/yyyy}" Width="110" />
+                                <DataGridTextColumn Header="Complete" Binding="{Binding Service.DateCompleted, StringFormat=MM/dd/yyyy}" Width="110" />
+                                <DataGridTextColumn Header="Total" Binding="{Binding Service.SaleAmount, StringFormat=C2}" Width="100" />
+                                <DataGridTextColumn Header="Payments" Binding="{Binding Service.Payments, StringFormat=C2}" Width="100" />
+                                <DataGridTextColumn Header="Credit/Discount" Binding="{Binding Service.Adjustments, StringFormat=C2}" Width="130" />
+                                <DataGridTextColumn Header="Balance" Binding="{Binding Service.Balance, StringFormat=C2}" Width="100" />
+                                <DataGridTemplateColumn Header="Pay" Width="70">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsPaying, UpdateSourceTrigger=PropertyChanged}" Margin="0"
+                                                      AutomationProperties.Name="{Binding Service.ServiceName, StringFormat='Pay {0}'}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <TextBlock Text="{Binding CheckedTotalText}" Style="{StaticResource FieldLabelText}" Margin="0,8,0,0" />
+                    </StackPanel>
+                </views:SectionPanel>
+
+                <!-- ===== Remaining money (fills after an amount is entered) ===== -->
+                <views:SectionPanel Header="Select where to apply remaining money" Margin="0,18,0,0"
+                                    Visibility="{Binding HasAmount, Converter={StaticResource BoolToVisibility}}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding RemainingText}" FontWeight="Bold" Margin="0,0,0,6" />
+                        <WrapPanel AutomationProperties.Name="Where to apply remaining money">
+                            <RadioButton GroupName="RemainingOption" Content="Apply to service"
+                                         IsChecked="{Binding RemainingOption, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:RemainingMoneyOption.ApplyToService}}" />
+                            <RadioButton GroupName="RemainingOption" Content="Apply as cash on account"
+                                         IsChecked="{Binding RemainingOption, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:RemainingMoneyOption.CashOnAccount}}" />
+                            <RadioButton GroupName="RemainingOption" Content="Apply as finance charge paid"
+                                         IsChecked="{Binding RemainingOption, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static vm:RemainingMoneyOption.FinanceChargePaid}}" />
+                        </WrapPanel>
+                    </StackPanel>
+                </views:SectionPanel>
+
+                <!-- ===== Accept (only when the form is complete and a row is checked) ===== -->
+                <Button Content="_Accept payment" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" MinWidth="180"
+                        Margin="0,16,0,0" Command="{Binding AcceptCommand}"
+                        Visibility="{Binding CanAccept, Converter={StaticResource BoolToVisibility}}" />
+                <TextBlock Style="{StaticResource NoteText}" Margin="0,16,0,0"
+                           Visibility="{Binding CanAccept, Converter={StaticResource InverseBoolToVisibility}}"
+                           Text="The Accept button appears when the account, amount (and check number for checks) are filled in and at least one Pay box is checked." />
+                <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource SuccessText}" Margin="0,12,0,0" />
+
+                <views:SectionPanel Header="Payments in this batch" Margin="0,18,0,0">
+                    <DataGrid ItemsSource="{Binding AcceptedPayments}" AutomationProperties.Name="Payments in this batch" MinHeight="90">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Paid by" Binding="{Binding InvoiceNumber}" Width="*" />
+                            <DataGridTextColumn Header="Account" Binding="{Binding AccountText}" Width="2*" />
+                            <DataGridTextColumn Header="Services" Binding="{Binding ServiceName}" Width="2*" />
+                            <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=C2}" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </views:SectionPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

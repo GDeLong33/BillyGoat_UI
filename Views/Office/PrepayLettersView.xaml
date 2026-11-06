@@ -1,0 +1,73 @@
+<UserControl x:Class="BillyGoat_UI.Views.PrepayLettersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views">
+    <!-- DataContext is a PrepayLettersViewModel. -->
+    <DockPanel>
+        <!-- ===== Title ===== -->
+        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,16">
+            <TextBlock Text="Print Prepay / Renewal Letters" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="One letter for each active account with the checked services in the date range." Style="{StaticResource SubtitleText}" />
+        </StackPanel>
+
+        <!-- ===== Buttons (bottom) ===== -->
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Content="Pre_view" MinWidth="110" Command="{Binding PreviewCommand}" />
+                <Button Content="_Print" Style="{StaticResource PrimaryButton}" MinWidth="110" Margin="10,0,0,0" Command="{Binding PrintCommand}" />
+                <Button Content="C_ustomize form" Margin="10,0,0,0" Command="{Binding CustomizeFormCommand}" />
+                <Button Content="_Close" MinWidth="110" Margin="10,0,0,0" Command="{Binding CloseCommand}" />
+            </StackPanel>
+            <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource SuccessText}" VerticalAlignment="Center" />
+        </DockPanel>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="280" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ===== Services checklist ===== -->
+                <views:SectionPanel Header="Services">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <Button Content="Check _all" Command="{Binding CheckAllCommand}" Padding="12,0" />
+                            <Button Content="_Uncheck all" Margin="8,0,0,0" Command="{Binding UncheckAllCommand}" Padding="12,0" />
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding Services}" ItemTemplate="{StaticResource CheckItemTemplate}"
+                                      AutomationProperties.Name="Services" Focusable="False" />
+                    </StackPanel>
+                </views:SectionPanel>
+
+                <!-- ===== Letter choices ===== -->
+                <views:SectionPanel Grid.Column="2" Header="Letter" VerticalAlignment="Top">
+                    <StackPanel>
+                        <UniformGrid Columns="2">
+                            <views:FormField Header="From date">
+                                <DatePicker SelectedDate="{Binding FromDate}" />
+                            </views:FormField>
+                            <views:FormField Header="To date">
+                                <DatePicker SelectedDate="{Binding ToDate}" />
+                            </views:FormField>
+                            <views:FormField Header="Letter size">
+                                <ComboBox ItemsSource="{Binding LetterSizes}" SelectedItem="{Binding LetterSize}" />
+                            </views:FormField>
+                            <views:FormField Header="Letter type">
+                                <ComboBox ItemsSource="{Binding LetterTypes}" SelectedItem="{Binding LetterType}" />
+                            </views:FormField>
+                            <views:FormField Header="Prepay percent (%)">
+                                <TextBox Text="{Binding PrepayPercentText, UpdateSourceTrigger=PropertyChanged}" />
+                            </views:FormField>
+                            <views:FormField Header="Prepay expiration date">
+                                <DatePicker SelectedDate="{Binding ExpirationDate}" />
+                            </views:FormField>
+                        </UniformGrid>
+                        <CheckBox Content="Print billing address on stub" IsChecked="{Binding PrintBillingOnStub}" />
+                    </StackPanel>
+                </views:SectionPanel>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>
