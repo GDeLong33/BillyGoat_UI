@@ -1,0 +1,58 @@
+<UserControl x:Class="BillyGoat_UI.Views.NotesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views">
+    <!-- DataContext is a NotesViewModel. -->
+    <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="Pages and Notes" Style="{StaticResource HeadingText}" Margin="0,0,0,12" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="18" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ===== Office notes ===== -->
+            <views:SectionPanel Header="Office notes">
+                <DockPanel>
+                    <!-- Add box -->
+                    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                        <views:FormField Header="Add a note" Margin="0,0,0,8">
+                            <TextBox Style="{StaticResource MultiLineTextBox}" MinHeight="64"
+                                     Text="{Binding NewNoteText, UpdateSourceTrigger=PropertyChanged}" />
+                        </views:FormField>
+                        <Button Content="_Add note" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left"
+                                Command="{Binding AddNoteCommand}" />
+                    </StackPanel>
+
+                    <!-- Notes, newest first, each with a day and time stamp -->
+                    <ListBox ItemsSource="{Binding Account.Notes}" AutomationProperties.Name="Office notes"
+                             HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock FontSize="{StaticResource SmallFontSize}" Foreground="{StaticResource MutedTextBrush}">
+                                        <Run Text="{Binding StampText, Mode=OneWay}" FontWeight="Bold" />
+                                        <Run Text="  by" />
+                                        <Run Text="{Binding EnteredBy, Mode=OneWay}" />
+                                    </TextBlock>
+                                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap" FontWeight="Normal" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </views:SectionPanel>
+
+            <!-- ===== Special instructions ===== -->
+            <views:SectionPanel Grid.Column="2" Header="Special instructions">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Style="{StaticResource NoteText}" Margin="0,0,0,8"
+                               Text="Printed on every work order for this account." />
+                    <TextBox Style="{StaticResource MultiLineTextBox}" AutomationProperties.Name="Special instructions"
+                             Text="{Binding Account.SpecialInstructions}" />
+                </DockPanel>
+            </views:SectionPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

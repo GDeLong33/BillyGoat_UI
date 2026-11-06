@@ -48,6 +48,7 @@ public partial class MainViewModel : ObservableObject
     private void OnSignedIn(User user)
     {
         CurrentUser = user;
+        Session.CurrentUser = user;
         CreatePages();
         SelectedPage = AppPage.Search;
         CurrentPage = _pages[AppPage.Search];
@@ -74,6 +75,8 @@ public partial class MainViewModel : ObservableObject
             return;
 
         CurrentUser = null;
+        Session.CurrentUser = null;
+        OpenedAccount = null;
         _pages.Clear();
         Login = new LoginViewModel(OnSignedIn);   // a new, empty login form
         CurrentPage = null;
@@ -126,10 +129,15 @@ public partial class MainViewModel : ObservableObject
         SelectedPage = AppPage.Account;
     }
 
-    /// <summary>"Add new customer" (from Search or from an open account).</summary>
+    /// <summary>
+    /// "Add new customer" (from Search or from an open account): shows the
+    /// Add New Customer dialog, then opens the new account on Contact Information.
+    /// </summary>
     private void AddNewCustomer()
     {
-        MessageService.Show("Add new customer is coming soon.");
+        AddCustomerViewModel dialog = new();
+        if (DialogService.ShowDialog(dialog) && dialog.CreatedAccount != null)
+            OpenAccount(dialog.CreatedAccount);
     }
 
     // ===== Menu bar =====

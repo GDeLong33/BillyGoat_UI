@@ -1,0 +1,35 @@
+<UserControl x:Class="BillyGoat_UI.Views.RequiredFieldsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views"
+             xmlns:services="clr-namespace:BillyGoat_UI.Services"
+             Width="560">
+    <!-- DataContext is a RequiredFieldsViewModel (shown after OK in Add New Customer). -->
+    <StackPanel>
+        <TextBlock Text="Some fields are required" Style="{StaticResource PageTitleText}" FontSize="24" />
+        <TextBlock Text="Please fill in these fields before the new customer is saved." Style="{StaticResource SubtitleText}"
+                   TextWrapping="Wrap" Margin="0,0,0,14" />
+
+        <UniformGrid Columns="2">
+            <views:FormField Header="Property type *">
+                <ComboBox ItemsSource="{x:Static services:Lookups.PropertyTypes}" SelectedItem="{Binding PropertyType}" />
+            </views:FormField>
+            <views:FormField Header="Route *">
+                <ComboBox ItemsSource="{x:Static services:Lookups.Routes}" SelectedItem="{Binding Route}" />
+            </views:FormField>
+            <views:FormField Header="Status *">
+                <ComboBox ItemsSource="{Binding Statuses}" SelectedItem="{Binding Status}" />
+            </views:FormField>
+            <views:FormField Header="Salesperson *">
+                <ComboBox ItemsSource="{x:Static services:Lookups.Salespeople}" SelectedItem="{Binding Salesperson}" />
+            </views:FormField>
+        </UniformGrid>
+
+        <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorText}" />
+
+        <StackPanel Style="{StaticResource DialogButtonRow}">
+            <Button Content="_Finish" Style="{StaticResource DialogPrimaryButton}" Command="{Binding FinishCommand}" />
+            <Button Content="Cancel" Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" IsCancel="True" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

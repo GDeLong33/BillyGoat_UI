@@ -70,13 +70,13 @@ public partial class AccountViewModel : ObservableObject
 
     private object CreateSection(AccountSection section) => section switch
     {
-        AccountSection.ContactInformation => new PlaceholderViewModel("Contact Information"),
-        AccountSection.Details => new PlaceholderViewModel("Details"),
-        AccountSection.PagesAndNotes => new PlaceholderViewModel("Pages and Notes"),
-        AccountSection.Services => new PlaceholderViewModel("Services"),
-        AccountSection.AccountingDefaults => new PlaceholderViewModel("Accounting Defaults"),
-        AccountSection.AccountingAdjustments => new PlaceholderViewModel("Accounting Adjustments"),
-        _ => new PlaceholderViewModel("Marketing Letters"),
+        AccountSection.ContactInformation => new ContactInfoViewModel(Account),
+        AccountSection.Details => new DetailsViewModel(Account),
+        AccountSection.PagesAndNotes => new NotesViewModel(Account),
+        AccountSection.Services => new ServicesViewModel(Account),
+        AccountSection.AccountingDefaults => new AccountingDefaultsViewModel(Account),
+        AccountSection.AccountingAdjustments => new AdjustmentsViewModel(Account),
+        _ => new MarketingLettersViewModel(Account),
     };
 
     // ===== Commands =====

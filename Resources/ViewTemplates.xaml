@@ -28,6 +28,46 @@
         <views:AccountView />
     </DataTemplate>
 
+    <!-- Account sub-screens -->
+    <DataTemplate DataType="{x:Type vm:ContactInfoViewModel}">
+        <views:ContactInfoView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:DetailsViewModel}">
+        <views:DetailsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:NotesViewModel}">
+        <views:NotesView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ServicesViewModel}">
+        <views:ServicesView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:AccountingDefaultsViewModel}">
+        <views:AccountingDefaultsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:AdjustmentsViewModel}">
+        <views:AdjustmentsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:MarketingLettersViewModel}">
+        <views:MarketingLettersView />
+    </DataTemplate>
+
+    <!-- Account dialogs -->
+    <DataTemplate DataType="{x:Type vm:StatusChangeViewModel}">
+        <views:StatusChangeView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ServiceEditorViewModel}">
+        <views:ServiceEditorView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:AddProgramViewModel}">
+        <views:AddProgramView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:AddCustomerViewModel}">
+        <views:AddCustomerView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:RequiredFieldsViewModel}">
+        <views:RequiredFieldsView />
+    </DataTemplate>
+
     <!-- Employees tab -->
     <DataTemplate DataType="{x:Type vm:EmployeesViewModel}">
         <views:EmployeesView />

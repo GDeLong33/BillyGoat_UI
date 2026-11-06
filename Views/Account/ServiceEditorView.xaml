@@ -1,0 +1,88 @@
+<UserControl x:Class="BillyGoat_UI.Views.ServiceEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views"
+             xmlns:services="clr-namespace:BillyGoat_UI.Services"
+             Width="820">
+    <!-- DataContext is a ServiceEditorViewModel (Add Service / Edit Service dialog). -->
+    <StackPanel>
+        <TextBlock Text="{Binding Title}" Style="{StaticResource PageTitleText}" FontSize="24" />
+        <TextBlock Text="{Binding AccountText}" Style="{StaticResource SubtitleText}" Margin="0,0,0,14" />
+
+        <UniformGrid Columns="3">
+            <views:FormField Header="Invoice number">
+                <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding InvoiceNumber, Mode=OneWay}" />
+            </views:FormField>
+            <views:FormField Header="Service">
+                <ComboBox ItemsSource="{x:Static services:Lookups.Services}" SelectedItem="{Binding ServiceName}"
+                          IsEnabled="{Binding IsAddMode}" />
+            </views:FormField>
+            <views:FormField Header="Units">
+                <TextBox Text="{Binding Units, UpdateSourceTrigger=PropertyChanged}" />
+            </views:FormField>
+
+            <views:FormField Header="Date sold">
+                <DatePicker SelectedDate="{Binding DateSold}" />
+            </views:FormField>
+            <views:FormField Header="Okayed by">
+                <TextBox Text="{Binding OkayedBy, UpdateSourceTrigger=PropertyChanged}" />
+            </views:FormField>
+            <views:FormField Header="Date scheduled">
+                <DatePicker SelectedDate="{Binding DateScheduled}" />
+            </views:FormField>
+
+            <views:FormField Header="Assigned employee">
+                <ComboBox ItemsSource="{Binding Employees}" SelectedItem="{Binding AssignedEmployee}" />
+            </views:FormField>
+            <views:FormField Header="Route">
+                <ComboBox ItemsSource="{x:Static services:Lookups.Routes}" SelectedItem="{Binding Route}" />
+            </views:FormField>
+            <views:FormField Header="Frequency">
+                <ComboBox ItemsSource="{x:Static services:Lookups.Frequencies}" SelectedItem="{Binding Frequency}" />
+            </views:FormField>
+
+            <views:FormField Header="Sort">
+                <ComboBox ItemsSource="{x:Static services:Lookups.SortOptions}" SelectedItem="{Binding Sort}" />
+            </views:FormField>
+            <views:FormField Header="Salesperson">
+                <ComboBox ItemsSource="{x:Static services:Lookups.Salespeople}" SelectedItem="{Binding Salesperson}" />
+            </views:FormField>
+            <views:FormField Header="Prenotify type">
+                <ComboBox ItemsSource="{x:Static services:Lookups.PrenotifyTypes}" SelectedItem="{Binding PrenotifyType}" />
+            </views:FormField>
+        </UniformGrid>
+
+        <!-- Amount of sale: read-only standard price when adding, editable when editing. -->
+        <Border Style="{StaticResource InfoBox}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <views:FormField Header="Amount of sale ($)" Margin="0,0,14,0">
+                    <TextBox Text="{Binding AmountText, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding IsAddMode}" FontWeight="Bold" />
+                </views:FormField>
+                <TextBlock Grid.Column="1" Text="{Binding PriceNote}" Style="{StaticResource NoteText}" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <WrapPanel Margin="0,0,0,8">
+            <CheckBox Content="Renewable" IsChecked="{Binding Renewable}" />
+            <CheckBox Content="Service this year" IsChecked="{Binding ServiceThisYear}" />
+            <CheckBox Content="Confirmation sent" IsChecked="{Binding ConfirmationSent}" />
+        </WrapPanel>
+
+        <views:FormField Header="Instructions" Margin="0">
+            <TextBox Style="{StaticResource MultiLineTextBox}" MinHeight="64" Text="{Binding Instructions, UpdateSourceTrigger=PropertyChanged}" />
+        </views:FormField>
+
+        <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorText}" Margin="0,12,0,0" />
+        <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource SuccessText}" Margin="0,12,0,0" />
+
+        <StackPanel Style="{StaticResource DialogButtonRow}">
+            <Button Content="_OK" Style="{StaticResource DialogPrimaryButton}" Command="{Binding OkCommand}" />
+            <Button Content="Cancel" Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" IsCancel="True" />
+            <Button Content="_Apply" Style="{StaticResource DialogButton}" Command="{Binding ApplyCommand}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -438,6 +438,26 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
         <Setter Property="Background" Value="White" />
+        <Style.Triggers>
+            <!-- Visible keyboard focus: thicker dark green border. -->
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource TitleGreenBrush}" />
+                <Setter Property="BorderThickness" Value="2" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- The text part of a date picker: text centered vertically, no "Select a date" watermark. -->
+    <Style TargetType="DatePickerTextBox">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DatePickerTextBox">
+                    <Grid Background="Transparent">
+                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="2,0" Focusable="False" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- List box (Setup lists, route list, report list): square rows, green selection. -->
@@ -816,11 +836,39 @@
     <views:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility" />
     <views:NullToVisibilityConverter x:Key="NullToVisibility" />
 
-    <!-- Error message text (e.g. wrong password). -->
+    <!-- Error message text (e.g. wrong password). Hidden while the text is empty. -->
     <Style x:Key="ErrorText" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource PastDueBrush}" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AutomationProperties.LiveSetting" Value="Assertive" />
+        <Style.Triggers>
+            <Trigger Property="Text" Value="">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Success message text (e.g. "Saved"). Hidden while the text is empty. -->
+    <Style x:Key="SuccessText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource TitleGreenBrush}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AutomationProperties.LiveSetting" Value="Polite" />
+        <Style.Triggers>
+            <Trigger Property="Text" Value="">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Light green information box (e.g. inside the Status Change dialog). -->
+    <Style x:Key="InfoBox" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource ZebraRowBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="Margin" Value="0,0,0,12" />
     </Style>
 
     <!-- Row of dialog buttons at the bottom right (OK / Cancel / Apply). -->

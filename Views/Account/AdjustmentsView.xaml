@@ -1,0 +1,66 @@
+<UserControl x:Class="BillyGoat_UI.Views.AdjustmentsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views">
+    <!-- DataContext is an AdjustmentsViewModel. -->
+    <UserControl.Resources>
+        <Style x:Key="DetailLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}" />
+            <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        </Style>
+        <Style x:Key="DetailValue" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,2,0,12" />
+        </Style>
+    </UserControl.Resources>
+    <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="Accounting Adjustments" Style="{StaticResource HeadingText}" Margin="0,0,0,12" />
+
+        <!-- ===== Details of the selected line (bottom) ===== -->
+        <views:SectionPanel DockPanel.Dock="Bottom" Header="Service for the selected entry" Margin="0,18,0,0">
+            <Grid>
+                <!-- Shown only when the selected line has no service. -->
+                <TextBlock Text="This entry is not linked to a service.">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource NoteText}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedService}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <UniformGrid Columns="4" Visibility="{Binding SelectedService, Converter={StaticResource NullToVisibility}}">
+                    <StackPanel><TextBlock Text="Service" Style="{StaticResource DetailLabel}" /><TextBlock Text="{Binding SelectedService.ServiceName}" Style="{StaticResource DetailValue}" /></StackPanel>
+                    <StackPanel><TextBlock Text="Invoice" Style="{StaticResource DetailLabel}" /><TextBlock Text="{Binding SelectedService.InvoiceNumber}" Style="{StaticResource DetailValue}" /></StackPanel>
+                    <StackPanel><TextBlock Text="Sold" Style="{StaticResource DetailLabel}" /><TextBlock Text="{Binding SelectedService.DateSold, StringFormat=MM/dd/yyyy}" Style="{StaticResource DetailValue}" /></StackPanel>
+                    <StackPanel><TextBlock Text="Printed" Style="{StaticResource DetailLabel}" /><TextBlock Text="{Binding SelectedService.DatePrinted, StringFormat=MM/dd/yyyy, TargetNullValue=-}" Style="{StaticResource DetailValue}" /></StackPanel>
+                    <StackPanel><TextBlock Text="Completed" Style="{StaticResource DetailLabel}" /><TextBlock Text="{Binding SelectedService.DateCompleted, StringFormat=MM/dd/yyyy, TargetNullValue=-}" Style="{StaticResource DetailValue}" /></StackPanel>
+                    <StackPanel><TextBlock Text="Sale amount" Style="{StaticResource DetailLabel}" /><TextBlock Text="{Binding SelectedService.SaleAmount, StringFormat=C2}" Style="{StaticResource DetailValue}" /></StackPanel>
+                    <StackPanel><TextBlock Text="Adjustments" Style="{StaticResource DetailLabel}" /><TextBlock Text="{Binding SelectedService.Adjustments, StringFormat=C2}" Style="{StaticResource DetailValue}" /></StackPanel>
+                    <StackPanel><TextBlock Text="Balance" Style="{StaticResource DetailLabel}" /><TextBlock Text="{Binding SelectedService.Balance, StringFormat=C2}" Style="{StaticResource DetailValue}" /></StackPanel>
+                </UniformGrid>
+            </Grid>
+        </views:SectionPanel>
+
+        <!-- ===== Accounting history ===== -->
+        <views:SectionPanel Header="Accounting history">
+            <DataGrid Style="{StaticResource WideDataGrid}"
+                      ItemsSource="{Binding Account.Adjustments}"
+                      SelectedItem="{Binding SelectedEntry}"
+                      AutomationProperties.Name="Accounting history">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Entry date" Binding="{Binding EntryDate, StringFormat=MM/dd/yyyy}" Width="120" />
+                    <DataGridTextColumn Header="Transaction" Binding="{Binding Transaction}" Width="130" />
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="110" />
+                    <DataGridTextColumn Header="Memo" Binding="{Binding Memo}" Width="300" />
+                    <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=C2}" Width="110" />
+                    <DataGridTextColumn Header="Batch" Binding="{Binding Batch}" Width="100" />
+                    <DataGridTextColumn Header="Journalized" Binding="{Binding JournalizedText}" Width="120" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </views:SectionPanel>
+    </DockPanel>
+</UserControl>

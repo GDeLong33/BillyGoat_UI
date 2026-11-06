@@ -1,0 +1,100 @@
+<UserControl x:Class="BillyGoat_UI.Views.AccountingDefaultsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:BillyGoat_UI.Views"
+             xmlns:services="clr-namespace:BillyGoat_UI.Services">
+    <!-- DataContext is an AccountingDefaultsViewModel. The radio groups bind a string
+         property to each button's text with EnumToBool (it works for strings too). -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+        <StackPanel>
+            <TextBlock Text="Accounting Defaults" Style="{StaticResource HeadingText}" Margin="0,0,0,12" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ===== Account information ===== -->
+                <views:SectionPanel Header="Account information" VerticalAlignment="Top">
+                    <StackPanel>
+                        <views:FormField Header="Last statement sent">
+                            <DatePicker SelectedDate="{Binding Account.LastStatementSent}" />
+                        </views:FormField>
+                        <StackPanel Margin="0,0,0,10">
+                            <CheckBox Content="Don't send statements" IsChecked="{Binding Account.DontSendStatements}" />
+                            <CheckBox Content="Don't charge interest" IsChecked="{Binding Account.DontChargeInterest}" />
+                            <CheckBox Content="Don't financial hold" IsChecked="{Binding Account.DontFinancialHold}" />
+                            <CheckBox Content="Reconfirm yearly" IsChecked="{Binding Account.ReconfirmYearly}" />
+                            <CheckBox Content="Cancel letter sent" IsChecked="{Binding Account.CancelLetterSent}" />
+                            <CheckBox Content="Welcome letter sent" IsChecked="{Binding Account.WelcomeLetterSent}" />
+                            <CheckBox Content="Hold current prices" IsChecked="{Binding Account.HoldCurrentPrices}" />
+                        </StackPanel>
+                        <UniformGrid Columns="2">
+                            <views:FormField Header="Confirmation date">
+                                <DatePicker SelectedDate="{Binding Account.ConfirmationDate}" />
+                            </views:FormField>
+                            <views:FormField Header="Confirmed by">
+                                <TextBox Text="{Binding Account.ConfirmedBy}" />
+                            </views:FormField>
+                        </UniformGrid>
+                        <views:FormField Header="Discount type">
+                            <ComboBox ItemsSource="{x:Static services:Lookups.DiscountTypes}" SelectedItem="{Binding Account.DiscountType}" />
+                        </views:FormField>
+                    </StackPanel>
+                </views:SectionPanel>
+
+                <StackPanel Grid.Column="2">
+                    <!-- ===== Credit card information ===== -->
+                    <views:SectionPanel Header="Credit card information">
+                        <StackPanel>
+                            <TextBlock Text="Card type" Style="{StaticResource FieldLabelText}" Margin="0,0,0,4" />
+                            <UniformGrid Columns="2" AutomationProperties.Name="Card type">
+                                <RadioButton GroupName="CardType" Content="None"
+                                             IsChecked="{Binding Account.CardType, Converter={StaticResource EnumToBool}, ConverterParameter=None}" />
+                                <RadioButton GroupName="CardType" Content="Mastercard"
+                                             IsChecked="{Binding Account.CardType, Converter={StaticResource EnumToBool}, ConverterParameter=Mastercard}" />
+                                <RadioButton GroupName="CardType" Content="Discover"
+                                             IsChecked="{Binding Account.CardType, Converter={StaticResource EnumToBool}, ConverterParameter=Discover}" />
+                                <RadioButton GroupName="CardType" Content="Visa"
+                                             IsChecked="{Binding Account.CardType, Converter={StaticResource EnumToBool}, ConverterParameter=Visa}" />
+                                <RadioButton GroupName="CardType" Content="American Express"
+                                             IsChecked="{Binding Account.CardType, Converter={StaticResource EnumToBool}, ConverterParameter=American Express}" />
+                                <RadioButton GroupName="CardType" Content="Other"
+                                             IsChecked="{Binding Account.CardType, Converter={StaticResource EnumToBool}, ConverterParameter=Other}" />
+                            </UniformGrid>
+                        </StackPanel>
+                    </views:SectionPanel>
+
+                    <!-- ===== Account billing type ===== -->
+                    <views:SectionPanel Header="Account billing type" Margin="0,18,0,0">
+                        <WrapPanel AutomationProperties.Name="Account billing type">
+                            <RadioButton GroupName="BillingType" Content="Normal"
+                                         IsChecked="{Binding Account.BillingType, Converter={StaticResource EnumToBool}, ConverterParameter=Normal}" />
+                            <RadioButton GroupName="BillingType" Content="Main"
+                                         IsChecked="{Binding Account.BillingType, Converter={StaticResource EnumToBool}, ConverterParameter=Main}" />
+                            <RadioButton GroupName="BillingType" Content="Sub"
+                                         IsChecked="{Binding Account.BillingType, Converter={StaticResource EnumToBool}, ConverterParameter=Sub}" />
+                            <RadioButton GroupName="BillingType" Content="Corporate"
+                                         IsChecked="{Binding Account.BillingType, Converter={StaticResource EnumToBool}, ConverterParameter=Corporate}" />
+                        </WrapPanel>
+                    </views:SectionPanel>
+
+                    <!-- ===== Account pay type ===== -->
+                    <views:SectionPanel Header="Account pay type" Margin="0,18,0,0">
+                        <UniformGrid Columns="2" AutomationProperties.Name="Account pay type">
+                            <RadioButton GroupName="PayType" Content="Normal"
+                                         IsChecked="{Binding Account.PayType, Converter={StaticResource EnumToBool}, ConverterParameter=Normal}" />
+                            <RadioButton GroupName="PayType" Content="Pay plan"
+                                         IsChecked="{Binding Account.PayType, Converter={StaticResource EnumToBool}, ConverterParameter=Pay plan}" />
+                            <RadioButton GroupName="PayType" Content="Monthly - show price"
+                                         IsChecked="{Binding Account.PayType, Converter={StaticResource EnumToBool}, ConverterParameter=Monthly - show price}" />
+                            <RadioButton GroupName="PayType" Content="Monthly - no price"
+                                         IsChecked="{Binding Account.PayType, Converter={StaticResource EnumToBool}, ConverterParameter=Monthly - no price}" />
+                        </UniformGrid>
+                    </views:SectionPanel>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

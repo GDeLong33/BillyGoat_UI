@@ -1,0 +1,20 @@
+<Window x:Class="BillyGoat_UI.Views.DialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        FontFamily="{StaticResource AppFont}"
+        FontSize="{StaticResource BodyFontSize}"
+        Foreground="{StaticResource TextBrush}"
+        Background="{StaticResource PanelBrush}"
+        Loaded="DialogWindow_Loaded">
+    <!-- One window for every dialog. Its DataContext is a DialogViewModel, and the
+         ContentControl shows the matching view from Resources/ViewTemplates.xaml.
+         The ScrollViewer keeps tall dialogs usable on small laptop screens. -->
+    <ScrollViewer x:Name="Scroller" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                  Focusable="False">
+        <ContentControl Content="{Binding}" Margin="24,20,24,22" Focusable="False" />
+    </ScrollViewer>
+</Window>
