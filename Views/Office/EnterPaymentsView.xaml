@@ -20,15 +20,11 @@
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
             <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="18" />
-                        <ColumnDefinition Width="1.4*" />
-                    </Grid.ColumnDefinitions>
+                <!-- Side by side when there is room, otherwise one above the other. -->
+                <UniformGrid Columns="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource WidthToColumns}, ConverterParameter=900}">
 
                     <!-- ===== Account information ===== -->
-                    <views:SectionPanel Header="Account information" VerticalAlignment="Top">
+                    <views:SectionPanel Header="Account information" Margin="0,0,9,12">
                         <StackPanel>
                             <views:FormField Header="Account number or barcode">
                                 <TextBox Text="{Binding AccountNumberText, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" />
@@ -38,9 +34,9 @@
                     </views:SectionPanel>
 
                     <!-- ===== Payment details ===== -->
-                    <views:SectionPanel Grid.Column="2" Header="Payment details" VerticalAlignment="Top">
+                    <views:SectionPanel Header="Payment details" Margin="9,0,0,12">
                         <StackPanel>
-                            <UniformGrid Columns="4">
+                            <UniformGrid Columns="2">
                                 <views:FormField Header="Date">
                                     <DatePicker SelectedDate="{Binding PaymentDate}" />
                                 </views:FormField>
@@ -65,17 +61,22 @@
                             </WrapPanel>
                         </StackPanel>
                     </views:SectionPanel>
-                </Grid>
+                </UniformGrid>
 
-                <TextBlock Text="{Binding AccountHeaderText}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,14,0,0"
+                <TextBlock Text="{Binding AccountHeaderText}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,2,0,0"
                            AutomationProperties.LiveSetting="Polite" />
 
                 <!-- ===== Listing (fills after a valid account number) ===== -->
                 <views:SectionPanel Header="Services with a balance" Margin="0,10,0,0"
                                     Visibility="{Binding HasAccount, Converter={StaticResource BoolToVisibility}}">
                     <StackPanel>
-                        <DataGrid Style="{StaticResource WideDataGrid}" ItemsSource="{Binding Lines}" AutomationProperties.Name="Services to pay"
+                        <DataGrid Style="{StaticResource WideDataGrid}" ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}"
+                                  AutomationProperties.Name="Services to pay" AutomationProperties.HelpText="Press Space to check or uncheck Pay"
                                   MaxHeight="300">
+                            <!-- Keyboard: Space on the selected row toggles its Pay box. -->
+                            <DataGrid.InputBindings>
+                                <KeyBinding Key="Space" Command="{Binding TogglePayCommand}" />
+                            </DataGrid.InputBindings>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ST" Binding="{Binding Service.StatusCode}" Width="50" />
                                 <DataGridTextColumn Header="Service" Binding="{Binding Service.ServiceName}" Width="210" />
@@ -98,6 +99,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <TextBlock Text="{Binding CheckedTotalText}" Style="{StaticResource FieldLabelText}" Margin="0,8,0,0" />
+                        <TextBlock Text="Tip: select a row and press Space to check or uncheck Pay." Style="{StaticResource NoteText}" />
                     </StackPanel>
                 </views:SectionPanel>
 

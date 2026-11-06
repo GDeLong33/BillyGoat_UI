@@ -55,7 +55,7 @@
                 <!-- ===== Left rail (drawn on top of the main panel) ===== -->
                 <DockPanel Grid.Column="0" Panel.ZIndex="1" Background="{StaticResource RailGreenBrush}">
                     <!-- Logo mark and company name -->
-                    <StackPanel DockPanel.Dock="Top" Margin="0,18,0,18" HorizontalAlignment="Center">
+                    <StackPanel DockPanel.Dock="Top" Margin="0,12,0,12" HorizontalAlignment="Center">
                         <Grid Width="68" Height="68" AutomationProperties.Name="Billy Goat logo">
                             <Ellipse Fill="{StaticResource TitleGreenBrush}" Stroke="White" StrokeThickness="2" />
                             <Ellipse Margin="5" Stroke="{StaticResource SelectedRowBrush}" StrokeThickness="1.5" />
@@ -68,36 +68,46 @@
 
                     <!-- Signed-in user and Sign out link (bottom of the rail) -->
                     <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource TabInactiveBrush}" BorderThickness="0,1,0,0"
-                            Padding="22,14,16,16">
+                            Padding="22,10,16,10">
                         <StackPanel>
-                            <TextBlock Text="Signed in as" Foreground="{StaticResource SelectedRowBrush}"
-                                       FontSize="{StaticResource SmallFontSize}" />
-                            <TextBlock Text="{Binding SignedInName}" Foreground="White" FontWeight="Bold" TextWrapping="Wrap" />
-                            <TextBlock Text="{Binding SignedInRole}" Foreground="{StaticResource SelectedRowBrush}"
-                                       FontSize="{StaticResource SmallFontSize}" />
-                            <Button Content="Sign _out" Style="{StaticResource RailLinkButton}" Margin="0,6,0,0"
-                                    Command="{Binding SignOutCommand}" />
+                            <TextBlock Text="{Binding SignedInName, StringFormat='Signed in as {0}'}" Foreground="White" FontWeight="Bold" TextWrapping="Wrap" />
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Content="Sign _out" Style="{StaticResource RailLinkButton}"
+                                        Command="{Binding SignOutCommand}" />
+                                <TextBlock Text="{Binding SignedInRole}" Foreground="{StaticResource SelectedRowBrush}"
+                                           FontSize="{StaticResource SmallFontSize}" VerticalAlignment="Center" />
+                            </DockPanel>
                         </StackPanel>
                     </Border>
 
                     <!-- The tabs. Each RadioButton is checked when SelectedPage equals its
-                         ConverterParameter; checking it sets SelectedPage (see EnumToBoolConverter). -->
+                         ConverterParameter; checking it sets SelectedPage (see EnumToBoolConverter).
+                         Visibility follows the signed-in user's role (see MainViewModel). -->
+                    <!-- The tabs scroll if the window is very short. -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
                     <StackPanel VerticalAlignment="Top" AutomationProperties.Name="Main navigation">
                         <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Search"
+                                     Visibility="{Binding ShowMainTabs, Converter={StaticResource BoolToVisibility}}"
                                      IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Search}}" />
                         <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Office"
                                      IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Office}}" />
                         <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Employees"
+                                     Visibility="{Binding ShowMainTabs, Converter={StaticResource BoolToVisibility}}"
                                      IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Employees}}" />
                         <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Report Gallery"
+                                     Visibility="{Binding ShowMainTabs, Converter={StaticResource BoolToVisibility}}"
                                      IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.ReportGallery}}" />
                         <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Routing"
+                                     Visibility="{Binding ShowMainTabs, Converter={StaticResource BoolToVisibility}}"
                                      IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Routing}}" />
                         <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Backup &amp; Export"
+                                     Visibility="{Binding ShowAdminTabs, Converter={StaticResource BoolToVisibility}}"
                                      IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.BackupExport}}" />
                         <RadioButton Style="{StaticResource NavTabStyle}" GroupName="NavTabs" Content="Setup"
+                                     Visibility="{Binding ShowAdminTabs, Converter={StaticResource BoolToVisibility}}"
                                      IsChecked="{Binding SelectedPage, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static models:AppPage.Setup}}" />
                     </StackPanel>
+                    </ScrollViewer>
                 </DockPanel>
             </Grid>
         </DockPanel>

@@ -846,6 +846,7 @@
     <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     <views:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility" />
     <views:NullToVisibilityConverter x:Key="NullToVisibility" />
+    <views:WidthToColumnsConverter x:Key="WidthToColumns" />
 
     <!-- Error message text (e.g. wrong password). Hidden while the text is empty. -->
     <Style x:Key="ErrorText" TargetType="TextBlock">

@@ -19,15 +19,11 @@
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
             <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="18" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <!-- Side by side when there is room, otherwise one above the other. -->
+                <UniformGrid Columns="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource WidthToColumns}, ConverterParameter=900}">
 
                     <!-- ===== Service information ===== -->
-                    <views:SectionPanel Header="Service information" VerticalAlignment="Top">
+                    <views:SectionPanel Header="Service information" Margin="0,0,9,12">
                         <StackPanel>
                             <UniformGrid Columns="3">
                                 <views:FormField Header="Batch number">
@@ -50,7 +46,7 @@
                     </views:SectionPanel>
 
                     <!-- ===== Invoice (appears after a valid invoice number) ===== -->
-                    <views:SectionPanel Grid.Column="2" Header="Invoice" VerticalAlignment="Top">
+                    <views:SectionPanel Header="Invoice" Margin="9,0,0,12">
                         <Grid>
                             <TextBlock Text="Type or scan an invoice number to see the invoice." Style="{StaticResource NoteText}"
                                        Visibility="{Binding IsInvoiceFound, Converter={StaticResource InverseBoolToVisibility}}" />
@@ -75,20 +71,15 @@
                             </StackPanel>
                         </Grid>
                     </views:SectionPanel>
-                </Grid>
+                </UniformGrid>
 
-                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorText}" Margin="0,12,0,0" />
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorText}" />
                 <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource SuccessText}" Margin="0,12,0,0" />
 
-                <Grid Margin="0,18,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="18" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <UniformGrid Margin="0,12,0,0" Columns="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource WidthToColumns}, ConverterParameter=900}">
 
                     <!-- ===== Time entry ===== -->
-                    <views:SectionPanel Header="Time entry" VerticalAlignment="Top">
+                    <views:SectionPanel Header="Time entry" Margin="0,0,9,12">
                         <UniformGrid Columns="2">
                             <views:FormField Header="Time in (e.g. 8:15 AM)">
                                 <TextBox Text="{Binding TimeIn, UpdateSourceTrigger=PropertyChanged}" />
@@ -100,7 +91,7 @@
                     </views:SectionPanel>
 
                     <!-- ===== Material entry ===== -->
-                    <views:SectionPanel Grid.Column="2" Header="Material entry">
+                    <views:SectionPanel Header="Material entry" Margin="9,0,0,12">
                         <StackPanel>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -128,10 +119,10 @@
                             </DataGrid>
                         </StackPanel>
                     </views:SectionPanel>
-                </Grid>
+                </UniformGrid>
 
                 <!-- ===== Entered in this batch ===== -->
-                <views:SectionPanel Header="Entered in this batch" Margin="0,18,0,0">
+                <views:SectionPanel Header="Entered in this batch" Margin="0,6,0,0">
                     <DataGrid ItemsSource="{Binding PostedLines}" AutomationProperties.Name="Entered in this batch" MinHeight="90">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Invoice" Binding="{Binding InvoiceNumber}" Width="*" />

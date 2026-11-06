@@ -7,18 +7,13 @@
         <StackPanel>
             <TextBlock Text="Contact Information" Style="{StaticResource HeadingText}" Margin="0,0,0,12" />
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="18" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <views:SectionPanel Header="Billing information">
+            <!-- Billing and service side by side when there is room, otherwise one above the other. -->
+            <UniformGrid Columns="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource WidthToColumns}, ConverterParameter=860}">
+                <views:SectionPanel Header="Billing information" Margin="0,0,9,18">
                     <views:AddressFields DataContext="{Binding Account.Billing}" />
                 </views:SectionPanel>
 
-                <views:SectionPanel Grid.Column="2" Header="Service information">
+                <views:SectionPanel Header="Service information" Margin="9,0,0,18">
                     <StackPanel>
                         <views:AddressFields DataContext="{Binding Account.Service}" />
                         <views:FormField Header="Second service name (optional)">
@@ -26,9 +21,9 @@
                         </views:FormField>
                     </StackPanel>
                 </views:SectionPanel>
-            </Grid>
+            </UniformGrid>
 
-            <views:SectionPanel Header="Phone information" Margin="0,18,0,0">
+            <views:SectionPanel Header="Phone information">
                 <StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>

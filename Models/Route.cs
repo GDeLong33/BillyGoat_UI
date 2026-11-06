@@ -14,6 +14,9 @@ public partial class Route : ObservableObject
     {
         Number = number;
         Name = name;
+
+        // When stops are added or removed, the "4 stops" text must update.
+        Stops.CollectionChanged += (_, _) => OnPropertyChanged(nameof(StopCountText));
     }
 
     public int Number { get; }
@@ -30,6 +33,9 @@ public partial class Route : ObservableObject
 
     /// <summary>The stops in driving order.</summary>
     public ObservableCollection<RouteStop> Stops { get; } = new();
+
+    /// <summary>"1 stop" or "4 stops".</summary>
+    public string StopCountText => Stops.Count == 1 ? "1 stop" : $"{Stops.Count} stops";
 
     /// <summary>Sets each stop's StopNumber to 1, 2, 3... after the order changes.</summary>
     public void RenumberStops()

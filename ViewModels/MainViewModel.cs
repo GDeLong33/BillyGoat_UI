@@ -38,11 +38,25 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsSignedIn))]
     [NotifyPropertyChangedFor(nameof(SignedInName))]
     [NotifyPropertyChangedFor(nameof(SignedInRole))]
+    [NotifyPropertyChangedFor(nameof(ShowMainTabs))]
+    [NotifyPropertyChangedFor(nameof(ShowAdminTabs))]
     public partial User? CurrentUser { get; set; }
 
     public bool IsSignedIn => CurrentUser != null;
     public string SignedInName => CurrentUser?.FullName ?? "";
     public string SignedInRole => CurrentUser?.Role.ToString() ?? "";
+
+    // ===== Role limits =====
+    //   Administrator: sees everything.
+    //   Office:        everything except Backup & Export and Setup.
+    //   Applicator:    only the Office tab, and there only "Enter Completed Services".
+    // Hidden tabs are not created at all, so they cannot be reached another way.
+
+    /// <summary>Search, Employees, Report Gallery and Routing (hidden for applicators).</summary>
+    public bool ShowMainTabs => CurrentUser != null && CurrentUser.Role != UserRole.Applicator;
+
+    /// <summary>Backup &amp; Export and Setup (administrators only).</summary>
+    public bool ShowAdminTabs => CurrentUser?.Role == UserRole.Administrator;
 
     /// <summary>LoginViewModel calls this after a correct user ID and password.</summary>
     private void OnSignedIn(User user)
@@ -50,21 +64,31 @@ public partial class MainViewModel : ObservableObject
         CurrentUser = user;
         Session.CurrentUser = user;
         CreatePages();
-        SelectedPage = AppPage.Search;
-        CurrentPage = _pages[AppPage.Search];
+
+        // Applicators start on Office (their only tab); everyone else on Search.
+        AppPage start = ShowMainTabs ? AppPage.Search : AppPage.Office;
+        SelectedPage = start;
+        CurrentPage = _pages[start];
     }
 
-    /// <summary>Creates a fresh ViewModel for every tab.</summary>
+    /// <summary>Creates a fresh ViewModel for every tab the signed-in user may see.</summary>
     private void CreatePages()
     {
         _pages.Clear();
-        _pages[AppPage.Search] = new SearchViewModel(OpenAccount, AddNewCustomer);
-        _pages[AppPage.Office] = new OfficeViewModel(showAllTools: true);
-        _pages[AppPage.Employees] = new EmployeesViewModel(goHome: () => SelectedPage = AppPage.Search);
-        _pages[AppPage.ReportGallery] = new ReportGalleryViewModel();
-        _pages[AppPage.Routing] = new RoutingViewModel();
-        _pages[AppPage.BackupExport] = new BackupViewModel();
-        _pages[AppPage.Setup] = new SetupViewModel();
+        _pages[AppPage.Office] = new OfficeViewModel(showAllTools: ShowMainTabs);
+
+        if (ShowMainTabs)
+        {
+            _pages[AppPage.Search] = new SearchViewModel(OpenAccount, AddNewCustomer);
+            _pages[AppPage.Employees] = new EmployeesViewModel(goHome: () => SelectedPage = AppPage.Search);
+            _pages[AppPage.ReportGallery] = new ReportGalleryViewModel();
+            _pages[AppPage.Routing] = new RoutingViewModel();
+        }
+        if (ShowAdminTabs)
+        {
+            _pages[AppPage.BackupExport] = new BackupViewModel();
+            _pages[AppPage.Setup] = new SetupViewModel();
+        }
     }
 
     /// <summary>"Sign out" link at the bottom of the rail.</summary>

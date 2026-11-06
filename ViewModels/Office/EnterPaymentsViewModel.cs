@@ -106,6 +106,17 @@ public partial class EnterPaymentsViewModel : ObservableObject
 
     public ObservableCollection<PaymentLine> Lines { get; } = new();
 
+    /// <summary>The highlighted row in the listing.</summary>
+    [ObservableProperty] public partial PaymentLine? SelectedLine { get; set; }
+
+    /// <summary>Space bar on a row: checks or unchecks its Pay box (keyboard users).</summary>
+    [RelayCommand]
+    private void TogglePay()
+    {
+        if (SelectedLine != null)
+            SelectedLine.IsPaying = !SelectedLine.IsPaying;
+    }
+
     /// <summary>Total balance of the checked rows.</summary>
     private decimal CheckedTotal => Lines.Where(l => l.IsPaying).Sum(l => Math.Max(0, l.Service.Balance));
 

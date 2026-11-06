@@ -63,7 +63,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="240" />
                     </Grid.ColumnDefinitions>
                     <ListBox ItemsSource="{Binding SelectedList.Items}" SelectedItem="{Binding SelectedItem}"
                              AutomationProperties.Name="{Binding SelectedList.Name}" />

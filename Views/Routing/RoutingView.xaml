@@ -9,7 +9,10 @@
             <TextBlock Text="Choose a route to see its stops in driving order." Style="{StaticResource SubtitleText}" />
         </StackPanel>
 
-        <Grid>
+        <!-- The page scrolls when the window is short; MinHeight keeps the stop list a usable size.
+             (Inside a ScrollViewer the star sizes still fill the space when the window is tall.) -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+        <Grid MinHeight="620">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300" />
                 <ColumnDefinition Width="20" />
@@ -31,7 +34,7 @@
                                 <StackPanel>
                                     <TextBlock Text="{Binding DisplayName}" />
                                     <TextBlock Style="{StaticResource NoteText}" FontWeight="Normal"
-                                               Text="{Binding Stops.Count, StringFormat='{}{0} stops'}" />
+                                               Text="{Binding StopCountText}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -75,5 +78,6 @@
                 </DockPanel>
             </views:SectionPanel>
         </Grid>
+        </ScrollViewer>
     </DockPanel>
 </UserControl>

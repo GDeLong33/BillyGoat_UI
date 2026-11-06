@@ -14,12 +14,13 @@
 
             <Button Content="_Back to main menu" Command="{Binding BackToMenuCommand}" VerticalAlignment="Center" />
 
-            <StackPanel Grid.Column="1" Margin="22,0,0,0" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Account.AccountNumber}" Style="{StaticResource PageTitleText}" />
-                    <TextBlock Text="{Binding Account.BillingName}" Style="{StaticResource PageTitleText}" Margin="16,0,0,0" />
+            <StackPanel Grid.Column="1" Margin="22,0,16,0" VerticalAlignment="Center">
+                <!-- WrapPanel: the status badge moves to the next line on a narrow window. -->
+                <WrapPanel>
+                    <TextBlock Text="{Binding Account.AccountNumber}" Style="{StaticResource PageTitleText}" Margin="0,0,16,0" />
+                    <TextBlock Text="{Binding Account.BillingName}" Style="{StaticResource PageTitleText}" Margin="0,0,16,0" />
                     <!-- Status badge: green when Active, red otherwise. -->
-                    <Border Margin="16,0,0,0" Padding="10,2" VerticalAlignment="Center" BorderThickness="1">
+                    <Border Padding="10,2" VerticalAlignment="Center" BorderThickness="1">
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Setter Property="Background" Value="{StaticResource SelectedRowBrush}" />
@@ -45,7 +46,7 @@
                             </TextBlock.Style>
                         </TextBlock>
                     </Border>
-                </StackPanel>
+                </WrapPanel>
                 <TextBlock Text="{Binding Account.ServiceAddressText, StringFormat='Service address: {0}'}" Style="{StaticResource SubtitleText}" />
             </StackPanel>
 
